@@ -1,178 +1,1457 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shoprite | Lower Prices Everyday & Extra Savings</title>
-    <!-- Meta description optimized for budget-conscious shoppers -->
-    <meta name="description"
-        content="Stretch your budget with Shoprite's low prices, Ritebrand essentials, weekly digital leaflets, and instant Xtra Savings discounts near you.">
-</head>
+    <meta name="description" content="Shoprite - Lower Prices You Can Trust Always. Shop groceries, utility top-ups, and Xtra Savings deals.">
+    <title>Shoprite | Lower Prices You Can Trust Always</title>
+    <style>
+        /* CSS RESET & VARIABLES */
+        :root {
+            --shoprite-red: #E00000;
+            --shoprite-red-dark: #b30000;
+            --shoprite-yellow: #FFCC00;
+            --shoprite-yellow-dark: #e6b800;
+            --dark-gray: #222222;
+            --medium-gray: #666666;
+            --light-bg: #F4F4F9;
+            --card-border: #E2E8F0;
+            --white: #FFFFFF;
+            --green: #2E7D32;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-gray);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ACCESSIBILITY & UTILITIES */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        /* AUTH BAR (TOP UTILITY) */
+        .utility-bar {
+            background-color: var(--dark-gray);
+            color: var(--white);
+            padding: 0.5rem 1.5rem;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .auth-status-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-pill {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .auth-btn {
+            background: var(--shoprite-yellow);
+            color: var(--dark-gray);
+            font-weight: bold;
+            padding: 0.2rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .auth-btn:hover {
+            background: #fff;
+        }
+
+        /* HEADER & NAVIGATION */
+        header {
+            background-color: var(--shoprite-red);
+            color: var(--white);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            color: var(--white);
+        }
+
+        .logo-badge {
+            background-color: var(--shoprite-yellow);
+            color: var(--dark-gray);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 800;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        nav a.nav-link {
+            font-weight: 600;
+            padding: 0.5rem 0.8rem;
+            border-radius: 4px;
+            transition: var(--transition);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        nav a.nav-link:hover, nav a.nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--shoprite-yellow);
+        }
+
+        .cart-trigger {
+            background-color: var(--shoprite-yellow);
+            color: var(--dark-gray);
+            font-weight: 800;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .cart-trigger:hover {
+            transform: scale(1.05);
+            background: #ffffff;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            color: var(--white);
+            font-size: 1.8rem;
+        }
+
+        /* MAIN PAGE CONTAINERS */
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-section {
+            display: none; /* Controlled via JS tabs */
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* HERO & PROMOTIONAL BANNERS */
+        .hero-banner {
+            background: linear-gradient(135deg, var(--shoprite-red) 0%, var(--shoprite-red-dark) 100%);
+            color: var(--white);
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .hero-content {
+            max-width: 650px;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .hero-subtitle {
+            font-size: 1.15rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.95;
+        }
+
+        .cta-btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background-color: var(--shoprite-yellow);
+            color: var(--dark-gray);
+            font-weight: 800;
+            padding: 0.8rem 1.8rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: inline-block;
+        }
+
+        .btn-primary:hover {
+            background-color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--white);
+            border: 2px solid var(--white);
+            font-weight: 700;
+            padding: 0.8rem 1.8rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--white);
+            color: var(--shoprite-red);
+        }
+
+        /* GRID LAYOUTS */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* CARDS & CONTAINERS */
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            border-bottom: 2px solid var(--shoprite-red);
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            color: var(--shoprite-red);
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        /* CAMPAIGN LAUNCH DASHBOARD SPECIFIC */
+        .campaign-hub {
+            background-color: #FFFDF0;
+            border: 2px dashed var(--shoprite-yellow-dark);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .campaign-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .campaign-tag {
+            background-color: var(--shoprite-red);
+            color: var(--white);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* WHATSAPP SIMULATOR */
+        .phone-mockup {
+            background-color: #E5DDD5;
+            border: 12px solid #333;
+            border-radius: 24px;
+            padding: 1rem;
+            max-width: 360px;
+            margin: 0 auto;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .phone-header {
+            background-color: #075E54;
+            color: white;
+            padding: 0.6rem 0.8rem;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .chat-body {
+            height: 280px;
+            overflow-y: auto;
+            padding: 0.8rem 0.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .chat-msg {
+            max-width: 80%;
+            padding: 0.6rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            position: relative;
+        }
+
+        .msg-in {
+            background-color: white;
+            align-self: flex-start;
+            border-top-left-radius: 0;
+        }
+
+        .msg-out {
+            background-color: #DCF8C6;
+            align-self: flex-end;
+            border-top-right-radius: 0;
+        }
+
+        .chat-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+        }
+
+        .chat-opt-btn {
+            background: white;
+            border: 1px solid #075E54;
+            color: #075E54;
+            padding: 0.4rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .chat-opt-btn:hover {
+            background: #075E54;
+            color: white;
+        }
+
+        /* SPIN WHEEL SIMULATOR */
+        .wheel-container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wheel-spinner {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 8px solid var(--shoprite-red);
+            background: conic-gradient(
+                var(--shoprite-yellow) 0deg 90deg,
+                #fff 90deg 180deg,
+                var(--shoprite-yellow) 180deg 270deg,
+                #fff 270deg 360deg
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 20px solid var(--dark-gray);
+            z-index: 10;
+        }
+
+        /* PRODUCTS & CATALOGUE */
+        .product-card {
+            background: var(--white);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition);
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+        }
+
+        .product-badge {
+            background-color: var(--shoprite-red);
+            color: var(--white);
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            align-self: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--shoprite-red);
+            margin-bottom: 1rem;
+        }
+
+        .add-cart-btn {
+            background-color: var(--shoprite-yellow);
+            color: var(--dark-gray);
+            font-weight: 800;
+            padding: 0.6rem;
+            border-radius: 4px;
+            width: 100%;
+            transition: var(--transition);
+        }
+
+        .add-cart-btn:hover {
+            background-color: var(--shoprite-red);
+            color: var(--white);
+        }
+
+        /* MONEY MARKET TABS */
+        .mm-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .mm-tab-btn {
+            padding: 0.6rem 1.2rem;
+            background-color: #E2E8F0;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .mm-tab-btn.active {
+            background-color: var(--shoprite-red);
+            color: var(--white);
+        }
+
+        /* CUSTOMER JOURNEY TIMELINE */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 4px solid var(--shoprite-red);
+        }
+
+        .timeline-item {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.4rem;
+            top: 0;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: var(--shoprite-yellow);
+            border: 4px solid var(--shoprite-red);
+        }
+
+        /* FORM STYLING */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid #CBD5E1;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--shoprite-red);
+            box-shadow: 0 0 0 3px rgba(224, 0, 0, 0.1);
+        }
+
+        .error-message {
+            color: var(--shoprite-red);
+            font-size: 0.8rem;
+            margin-top: 0.2rem;
+            display: none;
+        }
+
+        /* MODAL (MODAL DIALOG / AUTH OVERLAY) */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 450px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            background: none;
+        }
+
+        /* FOOTER */
+        footer {
+            background-color: var(--dark-gray);
+            color: var(--white);
+            padding: 3rem 1.5rem 1.5rem 1.5rem;
+            margin-top: auto;
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-col h4 {
+            color: var(--shoprite-yellow);
+            margin-bottom: 1rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.85;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid #444;
+            text-align: center;
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        /* RESPONSIVE DESIGN MEDIA QUERIES */
+        @media (max-width: 992px) {
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .grid-3 { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero-banner { flex-direction: column; text-align: center; }
+            .cta-btn-group { justify-content: center; }
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .mobile-menu-btn { display: block; }
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: var(--shoprite-red);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+            nav ul.mobile-active {
+                display: flex;
+            }
+            .footer-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
 <body>
 
-    <!-- 1. Top Announcement Bar & Main Header -->
-    <header>
-        <div class="top-bar">
-            <p><strong>Xtra Savings:</strong> Swipe your card for instant cash savings at checkout today!</p>
+    <!-- UTILITY AUTH BAR -->
+    <div class="utility-bar">
+        <span>🇿🇦 Welcome to Shoprite — Lower Prices You Can Trust Always</span>
+        <div class="auth-status-container">
+            <div id="auth-info" class="user-pill">Logged Out</div>
+            <button id="auth-toggle-btn" class="auth-btn" onclick="openAuthModal()">Sign In / Loyalty Login</button>
         </div>
+    </div>
 
-        <nav class="main-nav">
-            <a href="/" class="logo">
-                <img src="shoprite-logo.png" alt="Shoprite - Lower Prices">
+    <!-- MAIN ACCESSIBLE NAVIGATION HEADER -->
+    <header>
+        <div class="nav-container">
+            <a href="#home" class="brand-logo" onclick="switchPage('home')">
+                SHOPRITE <span class="logo-badge">Xtra Savings</span>
             </a>
 
-            <ul>
-                <li><a href="#leaflets">Digital Leaflet</a></li>
-                <li><a href="#house-brands">Ritebrand Essentials</a></li>
-                <li><a href="#xtra-savings">Xtra Savings Card</a></li>
-                <li><a href="#store-finder">Find a Store</a></li>
-            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle Navigation Menu">☰</button>
 
-            <div class="header-cta">
-                <a href="#budget-calculator" class="btn-secondary">Budget Calculator</a>
-            </div>
-        </nav>
+            <nav>
+                <ul id="nav-list">
+                    <li><a href="#home" class="nav-link active" onclick="switchPage('home')">Home</a></li>
+                    <li><a href="#about" class="nav-link" onclick="switchPage('about')">About Us</a></li>
+                    <li><a href="#products" class="nav-link" onclick="switchPage('products')">Products & Services</a></li>
+                    <li><a href="#contact" class="nav-link" onclick="switchPage('contact')">Contact Us</a></li>
+                </ul>
+            </nav>
+
+            <button class="cart-trigger" onclick="openCartModal()">
+                🛒 Basket (<span id="cart-count">0</span>)
+            </button>
+        </div>
     </header>
 
     <main>
-        <!-- 2. Hero Section: Direct Value Proposition -->
-        <section class="hero-section">
-            <div class="hero-content">
-                <h1>Stretch Every Rand Further</h1>
-                <p>Nutrient-dense groceries, reliable house-brand alternatives, and aggressive weekly discounts tailored
-                    to keep your monthly budget intact.</p>
-                <div class="hero-actions">
-                    <a href="#leaflets" class="btn-primary">View Digital Leaflet</a>
-                    <a href="#store-finder" class="btn-outline">Find Nearest Store</a>
+
+        <!-- PAGE 1: HOME PAGE -->
+        <section id="home" class="page-section active">
+            
+            <!-- Hero Banner -->
+            <div class="hero-banner">
+                <div class="hero-content">
+                    <h1 class="hero-title">Get So Much More With The Shoprite Price</h1>
+                    <p class="hero-subtitle">Bringing South African households low-cost essential food, fresh groceries, and instant Xtra Savings every day.</p>
+                    <div class="cta-btn-group">
+                        <button class="btn-primary" onclick="switchPage('products')">Shop Weekly Deals</button>
+                        <button class="btn-secondary" onclick="scrollToCampaign()">Digital Launch Hub</button>
+                    </div>
                 </div>
             </div>
-            <div class="hero-image">
-                <img src="hero-groceries.jpg" alt="Affordable, high-value grocery staples from Shoprite">
-            </div>
-        </section>
 
-        <!-- 3. Key Value Drivers (Addressing Persona Pain Points) -->
-        <section class="value-pillars">
-            <h2>Why Smart Shoppers Choose Shoprite</h2>
-            <div class="pillars-grid">
-
-                <article class="pillar-card">
-                    <h3>Unbeatable Affordability</h3>
-                    <p>Aggressive price cuts on essential everyday staples like maize meal, poultry, dairy, and fresh
-                        produce.</p>
-                </article>
-
-                <article class="pillar-card">
-                    <h3>Ritebrand Alternatives</h3>
-                    <p>High-value, quality-checked house-brand alternatives engineered to stretch modest monthly
-                        stipends.</p>
-                </article>
-
-                <article class="pillar-card">
-                    <h3>Instant Xtra Savings</h3>
-                    <p>No waiting for points—enjoy immediate cash-back discounts directly at the checkout till.</p>
-                </article>
-
-                <article class="pillar-card">
-                    <h3>Convenient Locations</h3>
-                    <p>Easily stop by a store positioned along major public transport routes and city centers after
-                        work.</p>
-                </article>
-
-            </div>
-        </section>
-
-        <!-- 4. Consideration Phase: Digital Leaflet & Promotions -->
-        <section id="leaflets" class="leaflet-section">
-            <div class="section-header">
-                <h2>Weekly Digital Leaflet & Budget Combos</h2>
-                <p>Plan your shopping list before stepping into the store to stick strictly to your budget.</p>
-            </div>
-
-            <div class="leaflet-preview-container">
-                <div class="leaflet-card">
-                    <img src="weekly-specials-cover.jpg" alt="Weekly Food Specials Leaflet">
-                    <h3>Weekly Food Specials</h3>
-                    <p>Valid until Sunday</p>
-                    <a href="#" class="btn-secondary">Browse Specials</a>
+            <!-- DIGITAL LAUNCH CAMPAIGN HUB INTEGRATION -->
+            <div id="campaign-hub-section" class="campaign-hub">
+                <div class="campaign-header">
+                    <span class="campaign-tag">Digital Marketing Team Launch</span>
+                    <h2>"Xtra Value Everyday" Launch Campaign</h2>
+                    <p>Experience how our digital launch strategies connect mass-market shoppers directly to real savings.</p>
                 </div>
 
-                <div class="leaflet-card">
-                    <img src="budget-combos-cover.jpg" alt="Bulk & Combo Savings">
-                    <h3>Stipend-Saver Combos</h3>
-                    <p>Nutrient-dense staple bundles</p>
-                    <a href="#" class="btn-secondary">View Combos</a>
+                <div class="grid-3">
+                    
+                    <!-- Strategy Pillar 1: WhatsApp Commerce -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">1. WhatsApp Commerce</h3>
+                        </div>
+                        <p style="font-size:0.9rem; margin-bottom:1rem;">Zero-data friendly flyer distribution & instant balance lookup via South Africa's most used platform.</p>
+                        
+                        <!-- Phone Mockup -->
+                        <div class="phone-mockup">
+                            <div class="phone-header">📱 Shoprite WhatsApp Bot</div>
+                            <div class="chat-body" id="chat-body">
+                                <div class="chat-msg msg-in">Hala! Welcome to Shoprite Xtra Savings on WhatsApp. What would you like to do?</div>
+                            </div>
+                            <div class="chat-actions">
+                                <button class="chat-opt-btn" onclick="sendChatMessage('Check Savings Balance', 'Your Xtra Savings Balance is R84.50. You saved R18.00 this week!')">Check Savings Balance</button>
+                                <button class="chat-opt-btn" onclick="sendChatMessage('Get Weekly Leaflet', '📄 Here is this week\'s deal leaflet: Shoprite_Weekly_Deals.pdf')">Get Weekly Deals</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Strategy Pillar 2: Gamified Rewards (Spin & Win) -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">2. Gamified Rewards</h3>
+                        </div>
+                        <p style="font-size:0.9rem; margin-bottom:1rem;">Drive daily app engagement with our interactive "Spin & Win" discount wheel.</p>
+
+                        <div class="wheel-container">
+                            <div style="position:relative;">
+                                <div class="wheel-pointer"></div>
+                                <div class="wheel-spinner" id="spin-wheel">SPIN</div>
+                            </div>
+                            <button class="btn-primary" onclick="spinWheel()" style="margin-top:1rem;">Spin for Discounts</button>
+                            <p id="wheel-result" style="font-size:0.85rem; font-weight:bold; margin-top:0.5rem; color:var(--shoprite-red);"></p>
+                        </div>
+                    </div>
+
+                    <!-- Strategy Pillar 3: Marketing Analytics & Impact -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">3. Target Reach & Impact</h3>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:1rem;">
+                            <div style="background:#fff; padding:0.8rem; border-radius:6px; border-left:4px solid var(--shoprite-red);">
+                                <strong style="font-size:1.2rem;">2.5M+</strong>
+                                <p style="font-size:0.85rem;">Active WhatsApp Subscriptions targeted</p>
+                            </div>
+                            <div style="background:#fff; padding:0.8rem; border-radius:6px; border-left:4px solid var(--shoprite-yellow-dark);">
+                                <strong style="font-size:1.2rem;">15.4%</strong>
+                                <p style="font-size:0.85rem;">Higher voucher redemption via instant games</p>
+                            </div>
+                            <div style="background:#fff; padding:0.8rem; border-radius:6px; border-left:4px solid var(--green);">
+                                <strong style="font-size:1.2rem;">LSM / SEM 3–7</strong>
+                                <p style="font-size:0.85rem;">Mass-market core customer reach</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Quick Deals Showcase Grid -->
+            <h2 style="margin-bottom:1rem; border-left: 6px solid var(--shoprite-red); padding-left:0.6rem;">Featured Xtra Savings Deals</h2>
+            <div class="grid-4" id="home-featured-products">
+                <!-- Injected dynamically via JS -->
+            </div>
+
+        </section>
+
+
+        <!-- PAGE 2: ABOUT US PAGE -->
+        <section id="about" class="page-section">
+            <div class="card" style="margin-bottom:2rem;">
+                <div class="card-header">
+                    <h2 class="card-title">About Shoprite</h2>
+                </div>
+                <p style="margin-bottom:1rem;">Shoprite is South Africa's largest food retailer, dedicated to delivering affordable, high-quality groceries and household goods to budget-conscious households across the country and continent.</p>
+            </div>
+
+            <div class="grid-2">
+                <!-- Problem Solved -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">The Market Problem We Solve</h3>
+                    </div>
+                    <ul style="padding-left:1.2rem; line-height:1.8;">
+                        <li><strong>High Food Inflation:</strong> Offsetting rising cost-of-living pressure for vulnerable income groups.</li>
+                        <li><strong>Food Security:</strong> Guaranteeing steady access to nutritious bulk staples in urban and peri-urban regions.</li>
+                        <li><strong>Financial Inclusion:</strong> Offering accessible non-banking services via our Money Market counters.</li>
+                    </ul>
+                </div>
+
+                <!-- Live Authenticated Target Profile -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Active Shopper Account Card</h3>
+                    </div>
+                    <div id="about-auth-card">
+                        <!-- Populated by JS based on login state -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Journey Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">The Shoprite Customer Journey</h3>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>1. Discovery & Awareness</h4>
+                        <p>Customers discover deals through weekly WhatsApp alerts, digital flyers, local radio, or physical promotional leaflets.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>2. Smart Budget Planning</h4>
+                        <p>Shoppers compare item prices and calculate Xtra Savings discounts upfront before entering the store.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>3. In-Store / Digital Purchase</h4>
+                        <p>Items are purchased, and instant discounts are applied by swiping the Xtra Savings card or scanning the phone app at checkout.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>4. Post-Purchase Value</h4>
+                        <p>Shoppers verify till-slip savings and top up prepaid utilities at the Money Market counter during the same visit.</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 5. Action Phase: Store Finder for Commuters -->
-        <section id="store-finder" class="store-finder-section">
-            <h2>Find a Shoprite Along Your Route</h2>
-            <p>Locate accessible stores near your workplace, home, or transport hub.</p>
 
-            <form class="store-search-form" action="/search-store" method="GET">
-                <input type="text" name="location"
-                    placeholder="Enter suburb, town, or transit hub (e.g., Athlone, Cape Town)" required>
-                <button type="submit" class="btn-primary">Search Stores</button>
-            </form>
-        </section>
-
-        <!-- 6. Retention Phase: Xtra Savings Program -->
-        <section id="xtra-savings" class="xtra-savings-banner">
-            <div class="banner-content">
-                <h2>Join Xtra Savings in 60 Seconds</h2>
-                <p>Sign up digitally, swipe your card at checkout, and keep track of every rand saved on your receipt.
-                </p>
-                <a href="/register-card" class="btn-primary">Sign Up for Xtra Savings</a>
+        <!-- PAGE 3: PRODUCTS & SERVICES PAGE -->
+        <section id="products" class="page-section">
+            
+            <h2 style="margin-bottom:1rem;">Grocery Departments & Promotions</h2>
+            
+            <!-- Category Filter Buttons -->
+            <div style="display:flex; gap:0.5rem; margin-bottom:1.5rem; flex-wrap:wrap;">
+                <button class="mm-tab-btn active" onclick="filterProducts('all', this)">All Items</button>
+                <button class="mm-tab-btn" onclick="filterProducts('staples', this)">Staples & Grains</button>
+                <button class="mm-tab-btn" onclick="filterProducts('fresh', this)">Fresh Produce & Butchery</button>
+                <button class="mm-tab-btn" onclick="filterProducts('pantry', this)">Pantry Essentials</button>
             </div>
+
+            <!-- Full Product Grid -->
+            <div class="grid-4" id="full-product-grid">
+                <!-- Injected dynamically via JS -->
+            </div>
+
+            <!-- Shoprite Money Market Services -->
+            <div class="card" style="margin-top:3rem;">
+                <div class="card-header">
+                    <h2 class="card-title">Money Market Services</h2>
+                </div>
+                <p style="margin-bottom:1rem;">Pay bills, transfer funds, or top up utilities safely in-store or online.</p>
+
+                <div class="mm-tabs">
+                    <button class="mm-tab-btn active" onclick="switchMMTab('electricity', this)">Prepaid Electricity</button>
+                    <button class="mm-tab-btn" onclick="switchMMTab('transfers', this)">Money Transfers</button>
+                    <button class="mm-tab-btn" onclick="switchMMTab('airtime', this)">Airtime & Data</button>
+                </div>
+
+                <div id="mm-tab-content" style="background:#F8FAFC; padding:1.5rem; border-radius:8px;">
+                    <!-- JS renders active tab form -->
+                </div>
+            </div>
+
         </section>
 
-        <!-- 7. Word of Mouth & Community Recommendations -->
-        <section class="testimonials">
-            <h2>Trusted by Budget-Conscious Professionals & Students</h2>
-            <blockquote>
-                <p>"Shoprite's Ritebrand staples and Xtra Savings discounts allow me to maintain a zero-based budget
-                    every month without sacrificing quality nutrition."</p>
-                <cite>— Yamkela N., Marketing Trainee</cite>
-            </blockquote>
+
+        <!-- PAGE 4: CONTACT US & LEAD GENERATION PAGE -->
+        <section id="contact" class="page-section">
+            
+            <div class="grid-2">
+                
+                <!-- Contact Form with JS Validation -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Get in Touch with Us</h2>
+                    </div>
+                    <form id="contact-form" onsubmit="validateContactForm(event)" novalidate>
+                        <div class="form-group">
+                            <label for="contact-name">Full Name *</label>
+                            <input type="text" id="contact-name" class="form-control" placeholder="e.g. Lerato Ndlovu">
+                            <div class="error-message" id="err-name">Please enter your full name.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-email">Email Address *</label>
+                            <input type="email" id="contact-email" class="form-control" placeholder="e.g. lerato@example.co.za">
+                            <div class="error-message" id="err-email">Please enter a valid email address.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-category">Enquiry Type *</label>
+                            <select id="contact-category" class="form-control">
+                                <option value="">-- Select Category --</option>
+                                <option value="xtra">Xtra Savings Card Query</option>
+                                <option value="moneymarket">Money Market Services</option>
+                                <option value="store">Store Experience / Feedback</option>
+                            </select>
+                            <div class="error-message" id="err-category">Please select an enquiry category.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contact-message">Message *</label>
+                            <textarea id="contact-message" class="form-control" rows="4" placeholder="How can we assist you?"></textarea>
+                            <div class="error-message" id="err-message">Please enter your message.</div>
+                        </div>
+
+                        <button type="submit" class="btn-primary" style="width:100%;">Send Enquiry</button>
+                    </form>
+                </div>
+
+                <!-- Store Locator & Head Office Details -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Find Your Local Store</h2>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="store-search">Search Suburb or City</label>
+                        <input type="text" id="store-search" class="form-control" placeholder="e.g. Soweto, Cape Town, Durban..." oninput="filterStores()">
+                    </div>
+
+                    <div id="store-results" style="display:flex; flex-direction:column; gap:0.8rem; max-height:280px; overflow-y:auto; margin-bottom:1.5rem;">
+                        <!-- Store listings rendered via JS -->
+                    </div>
+
+                    <div style="border-top:1px solid #CBD5E1; padding-top:1rem; font-size:0.9rem;">
+                        <strong>Shoprite Head Office Address:</strong><br>
+                        Cnr William Dabbs & Old Paarl Roads, Brackenfell, 7560<br>
+                        <strong>Customer Care Line:</strong> 0800 010 709
+                    </div>
+                </div>
+
+            </div>
+
         </section>
+
     </main>
 
-    <!-- 8. Footer Section -->
+    <!-- AUTHENTICATION MODAL DIALOG -->
+    <div id="auth-modal" class="modal-backdrop">
+        <div class="modal-card">
+            <button class="close-modal" onclick="closeAuthModal()">✕</button>
+            <h2 style="color:var(--shoprite-red); margin-bottom:1rem;" id="modal-auth-title">Sign In to Xtra Savings</h2>
+            
+            <form id="login-form" onsubmit="handleAuthSubmit(event)">
+                <div class="form-group">
+                    <label>Xtra Savings Card Number or Email</label>
+                    <input type="text" id="login-id" class="form-control" placeholder="Enter card or email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password / Pin</label>
+                    <input type="password" id="login-pin" class="form-control" placeholder="••••" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%; margin-bottom:1rem;">Sign In</button>
+            </form>
+
+            <button class="btn-secondary" style="width:100%; color:var(--dark-gray); border-color:#ccc;" onclick="demoQuickLogin()">⚡ Quick Demo Login</button>
+        </div>
+    </div>
+
+    <!-- CART MODAL DIALOG -->
+    <div id="cart-modal" class="modal-backdrop">
+        <div class="modal-card" style="max-width:550px;">
+            <button class="close-modal" onclick="closeCartModal()">✕</button>
+            <h2 style="color:var(--shoprite-red); margin-bottom:1rem;">Your Shopping Basket</h2>
+            
+            <div id="cart-items-container" style="max-height:250px; overflow-y:auto; margin-bottom:1rem;">
+                <!-- Cart items rendered via JS -->
+            </div>
+
+            <div style="background:#FFFDF0; padding:1rem; border-radius:6px; border:1px solid var(--shoprite-yellow-dark); margin-bottom:1rem;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
+                    <span>Subtotal:</span>
+                    <strong id="cart-subtotal">R0.00</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; color:var(--green); font-weight:bold; margin-bottom:0.4rem;">
+                    <span>Xtra Savings Discount:</span>
+                    <span id="cart-discount">-R0.00</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:1.2rem; font-weight:900; border-top:1px solid #ddd; padding-top:0.4rem; color:var(--shoprite-red);">
+                    <span>Total Due:</span>
+                    <span id="cart-total">R0.00</span>
+                </div>
+            </div>
+
+            <button class="btn-primary" style="width:100%;" onclick="checkoutCart()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
     <footer>
-        <div class="footer-links">
+        <div class="footer-grid">
             <div class="footer-col">
-                <h4>Shoprite</h4>
+                <h4>Shoprite Group</h4>
                 <ul>
-                    <li><a href="#leaflets">Digital Leaflets</a></li>
-                    <li><a href="#store-finder">Store Finder</a></li>
-                    <li><a href="#xtra-savings">Xtra Savings Card</a></li>
+                    <li><a href="#about" onclick="switchPage('about')">About Us</a></li>
+                    <li><a href="https://www.shopriteholdings.co.za" target="_blank" rel="noopener">Shoprite Holdings</a></li>
+                    <li><a href="#about" onclick="switchPage('about')">Careers & Bursaries</a></li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Customer Support</h4>
                 <ul>
-                    <li><a href="/help">Help & FAQs</a></li>
-                    <li><a href="/contact">Contact Us</a></li>
-                    <li><a href="/store-hours">Store Operating Hours</a></li>
+                    <li><a href="#contact" onclick="switchPage('contact')">Store Locator</a></li>
+                    <li><a href="#contact" onclick="switchPage('contact')">Contact Us</a></li>
+                    <li><a href="#contact" onclick="switchPage('contact')">FAQ & Help</a></li>
                 </ul>
             </div>
             <div class="footer-col">
-                <h4>Legal & Privacy</h4>
+                <h4>Services</h4>
                 <ul>
-                    <li><a href="/privacy">Privacy Policy</a></li>
-                    <li><a href="/terms">Terms & Conditions</a></li>
+                    <li><a href="#products" onclick="switchPage('products')">Money Market</a></li>
+                    <li><a href="#home" onclick="switchPage('home')">Xtra Savings Deals</a></li>
+                    <li><a href="#products" onclick="switchPage('products')">LiquorShop</a></li>
                 </ul>
             </div>
+            <div class="footer-col">
+                <h4>Official Website</h4>
+                <p style="font-size:0.85rem; opacity:0.8; margin-bottom:0.5rem;">Visit the main portal for nationwide leaflets:</p>
+                <a href="https://www.shoprite.co.za" target="_blank" rel="noopener" class="logo-badge" style="display:inline-block;">www.shoprite.co.za</a>
+            </div>
         </div>
+
         <div class="footer-bottom">
-            <p>&copy; 2026 Shoprite Holdings Ltd. All rights reserved. Lower prices every day.</p>
+            <p>&copy; 2026 Shoprite Checkers (Pty) Ltd. All rights reserved. | Lower Prices You Can Trust Always.</p>
         </div>
     </footer>
 
-</body>
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        /* APPLICATION STATE */
+        let currentUser = null; // null = logged out
+        let cart = [];
 
+        const productsData = [
+            { id: 1, name: "Super Maize Meal 10kg", category: "staples", price: 99.99, normalPrice: 119.99, badge: "Save R20" },
+            { id: 2, name: "Long Grain Parboiled Rice 5kg", category: "staples", price: 79.99, normalPrice: 94.99, badge: "Xtra Savings" },
+            { id: 3, name: "Pure Sunflower Cooking Oil 2L", category: "pantry", price: 49.99, normalPrice: 62.99, badge: "Save R13" },
+            { id: 4, name: "Fresh Choice Whole Chicken per kg", category: "fresh", price: 56.99, normalPrice: 69.99, badge: "Butchery Deal" },
+            { id: 5, name: "Championship Boerewors 500g", category: "fresh", price: 49.99, normalPrice: 59.99, badge: "Fresh Meat" },
+            { id: 6, name: "Ritebrand Large Eggs 30 Pack", category: "fresh", price: 69.99, normalPrice: 79.99, badge: "Daily Bulk" },
+            { id: 7, name: "Full Cream Milk 2L", category: "fresh", price: 29.99, normalPrice: 34.99, badge: "Xtra Savings" },
+            { id: 8, name: "White Sugar 2.5kg", category: "pantry", price: 44.99, normalPrice: 52.99, badge: "Pantry Staple" }
+        ];
+
+        const storeData = [
+            { name: "Shoprite Jabulani Mall", suburb: "Soweto, Gauteng", hours: "08:00 - 19:00" },
+            { name: "Shoprite Golden Acre", suburb: "Cape Town CBD, Western Cape", hours: "08:00 - 18:00" },
+            { name: "Shoprite Middestad", suburb: "Pretoria, Gauteng", hours: "08:00 - 18:30" },
+            { name: "Shoprite Workshop", suburb: "Durban Central, KZN", hours: "08:00 - 18:00" }
+        ];
+
+        /* INITIALIZATION */
+        document.addEventListener("DOMContentLoaded", () => {
+            renderProducts(productsData);
+            renderHomeFeatured();
+            renderStores(storeData);
+            renderMoneyMarketTab('electricity');
+            updateAuthUI();
+        });
+
+        /* NAVIGATION PAGE SWITCHER */
+        function switchPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+
+            const target = document.getElementById(pageId);
+            if (target) {
+                target.classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            const activeLink = document.querySelector(`.nav-link[href="#${pageId}"]`);
+            if (activeLink) activeLink.classList.add('active');
+
+            // Close mobile menu if open
+            document.getElementById('nav-list').classList.remove('mobile-active');
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('nav-list').classList.toggle('mobile-active');
+        }
+
+        function scrollToCampaign() {
+            switchPage('home');
+            document.getElementById('campaign-hub-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* AUTHENTICATION SYSTEM */
+        function openAuthModal() {
+            document.getElementById('auth-modal').style.display = 'flex';
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').style.display = 'none';
+        }
+
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const idVal = document.getElementById('login-id').value;
+            currentUser = {
+                name: idVal.split('@')[0] || "Valued Customer",
+                cardNo: "6001 8842 9912",
+                savingsTotal: "R 240.50"
+            };
+            closeAuthModal();
+            updateAuthUI();
+        }
+
+        function demoQuickLogin() {
+            currentUser = {
+                name: "Sipho Dlamini",
+                cardNo: "6001 9931 4410",
+                savingsTotal: "R 385.00"
+            };
+            closeAuthModal();
+            updateAuthUI();
+        }
+
+        function logoutUser() {
+            currentUser = null;
+            updateAuthUI();
+        }
+
+        function updateAuthUI() {
+            const authInfo = document.getElementById('auth-info');
+            const authBtn = document.getElementById('auth-toggle-btn');
+            const aboutAuthCard = document.getElementById('about-auth-card');
+
+            if (currentUser) {
+                authInfo.innerHTML = `👤 ${currentUser.name}`;
+                authBtn.innerText = "Sign Out";
+                authBtn.onclick = logoutUser;
+
+                if (aboutAuthCard) {
+                    aboutAuthCard.innerHTML = `
+                        <p><strong>Status:</strong> <span style="color:var(--green); font-weight:bold;">Active Loyal Member</span></p>
+                        <p><strong>Shopper Name:</strong> ${currentUser.name}</p>
+                        <p><strong>Xtra Savings Card:</strong> ${currentUser.cardNo}</p>
+                        <p><strong>Total Lifetime Savings:</strong> <strong style="color:var(--shoprite-red);">${currentUser.savingsTotal}</strong></p>
+                    `;
+                }
+            } else {
+                authInfo.innerHTML = "Logged Out";
+                authBtn.innerText = "Sign In / Loyalty Login";
+                authBtn.onclick = openAuthModal;
+
+                if (aboutAuthCard) {
+                    aboutAuthCard.innerHTML = `
+                        <p style="margin-bottom:1rem;">You are currently browsing as a guest.</p>
+                        <button class="btn-primary" onclick="openAuthModal()">Sign In to View Loyalty Details</button>
+                    `;
+                }
+            }
+        }
+
+        /* PRODUCTS & CART LOGIC */
+        function renderProducts(list) {
+            const container = document.getElementById('full-product-grid');
+            if (!container) return;
+            container.innerHTML = list.map(item => `
+                <div class="product-card">
+                    <div>
+                        <span class="product-badge">${item.badge}</span>
+                        <h3 class="product-title">${item.name}</h3>
+                        <div class="product-price">R ${item.price.toFixed(2)}</div>
+                        <p style="font-size:0.8rem; text-decoration:line-through; color:var(--medium-gray);">Normal: R ${item.normalPrice.toFixed(2)}</p>
+                    </div>
+                    <button class="add-cart-btn" onclick="addToCart(${item.id})" style="margin-top:1rem;">+ Add to Basket</button>
+                </div>
+            `).join('');
+        }
+
+        function renderHomeFeatured() {
+            const container = document.getElementById('home-featured-products');
+            if (!container) return;
+            const featured = productsData.slice(0, 4);
+            container.innerHTML = featured.map(item => `
+                <div class="product-card">
+                    <div>
+                        <span class="product-badge">${item.badge}</span>
+                        <h3 class="product-title">${item.name}</h3>
+                        <div class="product-price">R ${item.price.toFixed(2)}</div>
+                    </div>
+                    <button class="add-cart-btn" onclick="addToCart(${item.id})">+ Add to Basket</button>
+                </div>
+            `).join('');
+        }
+
+        function filterProducts(cat, btn) {
+            document.querySelectorAll('#products .mm-tab-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+
+            if (cat === 'all') renderProducts(productsData);
+            else renderProducts(productsData.filter(p => p.category === cat));
+        }
+
+        function addToCart(productId) {
+            const prod = productsData.find(p => p.id === productId);
+            if (!prod) return;
+            cart.push(prod);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cart-count').innerText = cart.length;
+
+            const itemsContainer = document.getElementById('cart-items-container');
+            if (cart.length === 0) {
+                itemsContainer.innerHTML = "<p style='text-align:center; padding:1rem;'>Your shopping basket is empty.</p>";
+            } else {
+                itemsContainer.innerHTML = cart.map((item, index) => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0; border-bottom:1px solid #eee;">
+                        <div>
+                            <strong>${item.name}</strong><br>
+                            <small style="color:var(--shoprite-red);">R ${item.price.toFixed(2)}</small>
+                        </div>
+                        <button onclick="removeFromCart(${index})" style="background:none; color:var(--medium-gray); font-weight:bold;">✕</button>
+                    </div>
+                `).join('');
+            }
+
+            const subtotal = cart.reduce((sum, item) => sum + item.normalPrice, 0);
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            const discount = subtotal - total;
+
+            document.getElementById('cart-subtotal').innerText = `R ${subtotal.toFixed(2)}`;
+            document.getElementById('cart-discount').innerText = `-R ${discount.toFixed(2)}`;
+            document.getElementById('cart-total').innerText = `R ${total.toFixed(2)}`;
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function openCartModal() {
+            document.getElementById('cart-modal').style.display = 'flex';
+        }
+
+        function closeCartModal() {
+            document.getElementById('cart-modal').style.display = 'none';
+        }
+
+        function checkoutCart() {
+            if (cart.length === 0) {
+                alert("Your basket is empty!");
+                return;
+            }
+            alert("Order placed successfully! Thank you for shopping with Shoprite.");
+            cart = [];
+            updateCartUI();
+            closeCartModal();
+        }
+
+        /* MONEY MARKET TAB SWITCHER */
+        function switchMMTab(tabKey, btn) {
+            document.querySelectorAll('.mm-tabs .mm-tab-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            renderMoneyMarketTab(tabKey);
+        }
+
+        function renderMoneyMarketTab(key) {
+            const container = document.getElementById('mm-tab-content');
+            if (key === 'electricity') {
+                container.innerHTML = `
+                    <h3>Buy Prepaid Electricity</h3>
+                    <p style="font-size:0.85rem; margin-bottom:1rem;">Top up Eskom or Municipal meters instantly.</p>
+                    <div class="form-group">
+                        <label>Meter Number</label>
+                        <input type="text" class="form-control" placeholder="0412 3456 7890">
+                    </div>
+                    <div class="form-group">
+                        <label>Amount (ZAR)</label>
+                        <input type="number" class="form-control" placeholder="e.g. 100">
+                    </div>
+                    <button class="btn-primary" onclick="alert('Electricity Top-Up Processed!')">Purchase Tokens</button>
+                `;
+            } else if (key === 'transfers') {
+                container.innerHTML = `
+                    <h3>Shoprite Money Market Transfer</h3>
+                    <p style="font-size:0.85rem; margin-bottom:1rem;">Send money to any South African mobile number for cash pick-up at any till point.</p>
+                    <div class="form-group">
+                        <label>Recipient Mobile Phone Number</label>
+                        <input type="tel" class="form-control" placeholder="082 123 4567">
+                    </div>
+                    <div class="form-group">
+                        <label>Transfer Amount (ZAR)</label>
+                        <input type="number" class="form-control" placeholder="e.g. 500">
+                    </div>
+                    <button class="btn-primary" onclick="alert('Money Transfer Voucher Issued!')">Send Money Now</button>
+                `;
+            } else {
+                container.innerHTML = `
+                    <h3>Airtime & Data Bundles</h3>
+                    <p style="font-size:0.85rem; margin-bottom:1rem;">Vodacom, MTN, Telkom & Cell C recharge.</p>
+                    <div class="form-group">
+                        <label>Cell Phone Number</label>
+                        <input type="tel" class="form-control" placeholder="071 987 6543">
+                    </div>
+                    <button class="btn-primary" onclick="alert('Airtime recharge complete!')">Recharge Now</button>
+                `;
+            }
+        }
+
+        /* CAMPAIGN INTERACTIVE TOOLS */
+        function sendChatMessage(userMsg, botReply) {
+            const body = document.getElementById('chat-body');
+            body.innerHTML += `<div class="chat-msg msg-out">${userMsg}</div>`;
+            setTimeout(() => {
+                body.innerHTML += `<div class="chat-msg msg-in">${botReply}</div>`;
+                body.scrollTop = body.scrollHeight;
+            }, 600);
+        }
+
+        function spinWheel() {
+            const wheel = document.getElementById('spin-wheel');
+            const degrees = Math.floor(1800 + Math.random() * 360);
+            wheel.style.transform = `rotate(${degrees}deg)`;
+            
+            setTimeout(() => {
+                document.getElementById('wheel-result').innerText = "🎉 Winner! R15 Off Voucher Applied to Maize Meal!";
+            }, 3000);
+        }
+
+        /* CONTACT FORM VALIDATION */
+        function validateContactForm(e) {
+            e.preventDefault();
+            let isValid = true;
+
+            const name = document.getElementById('contact-name').value.trim();
+            const email = document.getElementById('contact-email').value.trim();
+            const cat = document.getElementById('contact-category').value;
+            const msg = document.getElementById('contact-message').value.trim();
+
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+
+            if (!name) {
+                document.getElementById('err-name').style.display = 'block';
+                isValid = false;
+            }
+            if (!email || !email.includes('@')) {
+                document.getElementById('err-email').style.display = 'block';
+                isValid = false;
+            }
+            if (!cat) {
+                document.getElementById('err-category').style.display = 'block';
+                isValid = false;
+            }
+            if (!msg) {
+                document.getElementById('err-message').style.display = 'block';
+                isValid = false;
+            }
+
+            if (isValid) {
+                alert("Thank you, " + name + "! Your enquiry has been received. Our team will get back to you shortly.");
+                document.getElementById('contact-form').reset();
+            }
+        }
+
+        /* STORE LOCATOR SEARCH */
+        function renderStores(list) {
+            const container = document.getElementById('store-results');
+            if (!container) return;
+            container.innerHTML = list.map(s => `
+                <div style="background:#FFFDF0; padding:0.8rem; border-radius:6px; border:1px solid #E2E8F0;">
+                    <strong>${s.name}</strong><br>
+                    <small style="color:var(--medium-gray);">${s.suburb}</small><br>
+                    <small style="color:var(--green); font-weight:bold;">Hours: ${s.hours}</small>
+                </div>
+            `).join('');
+        }
+
+        function filterStores() {
+            const query = document.getElementById('store-search').value.toLowerCase();
+            const filtered = storeData.filter(s => s.name.toLowerCase().includes(query) || s.suburb.toLowerCase().includes(query));
+            renderStores(filtered);
+        }
+    </script>
+</body>
 </html>
