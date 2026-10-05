@@ -1,1457 +1,901 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Shoprite - Lower Prices You Can Trust Always. Shop groceries, utility top-ups, and Xtra Savings deals.">
-    <title>Shoprite | Lower Prices You Can Trust Always</title>
+    <title>Pick n Cheaper Supermarket | Fresh Quality, Everyday Low Prices</title>
+    <meta name="description" content="Welcome to Pick n Cheaper Supermarket. Enjoy fresh produce, bakery goods, cheaper value packs, and pay-point services with top savings in South Africa.">
+    <meta name="keywords" content="supermarket, grocery, fresh produce, discount grocery, savings calculator, shopping list, Cape Town, South Africa">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            red: '#D32F2F',
+                            darkRed: '#B71C1C',
+                            green: '#2E7D32',
+                            lightGreen: '#4CAF50',
+                            yellow: '#FBC02D',
+                            dark: '#1A1A1A',
+                            light: '#F8F9FA'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS for specific overrides & fine animation -->
     <style>
-        /* CSS RESET & VARIABLES */
-        :root {
-            --shoprite-red: #E00000;
-            --shoprite-red-dark: #b30000;
-            --shoprite-yellow: #FFCC00;
-            --shoprite-yellow-dark: #e6b800;
-            --dark-gray: #222222;
-            --medium-gray: #666666;
-            --light-bg: #F4F4F9;
-            --card-border: #E2E8F0;
-            --white: #FFFFFF;
-            --green: #2E7D32;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --transition: all 0.3s ease;
+        .modal-blur {
+            backdrop-filter: blur(8px);
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
-        }
-
-        body {
-            background-color: var(--light-bg);
-            color: var(--dark-gray);
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ACCESSIBILITY & UTILITIES */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        button {
-            cursor: pointer;
-            border: none;
-            font-family: inherit;
-        }
-
-        /* AUTH BAR (TOP UTILITY) */
-        .utility-bar {
-            background-color: var(--dark-gray);
-            color: var(--white);
-            padding: 0.5rem 1.5rem;
-            font-size: 0.85rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .auth-status-container {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .user-pill {
-            background-color: rgba(255, 255, 255, 0.15);
-            padding: 0.2rem 0.6rem;
-            border-radius: 20px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .auth-btn {
-            background: var(--shoprite-yellow);
-            color: var(--dark-gray);
-            font-weight: bold;
-            padding: 0.2rem 0.8rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            transition: var(--transition);
-        }
-
-        .auth-btn:hover {
-            background: #fff;
-        }
-
-        /* HEADER & NAVIGATION */
-        header {
-            background-color: var(--shoprite-red);
-            color: var(--white);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem 1.5rem;
-        }
-
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.8rem;
-            font-weight: 900;
-            letter-spacing: 0.5px;
-            color: var(--white);
-        }
-
-        .logo-badge {
-            background-color: var(--shoprite-yellow);
-            color: var(--dark-gray);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            font-weight: 800;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 1.5rem;
-            align-items: center;
-        }
-
-        nav a.nav-link {
-            font-weight: 600;
-            padding: 0.5rem 0.8rem;
-            border-radius: 4px;
-            transition: var(--transition);
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        nav a.nav-link:hover, nav a.nav-link.active {
-            background-color: rgba(255, 255, 255, 0.2);
-            color: var(--shoprite-yellow);
-        }
-
-        .cart-trigger {
-            background-color: var(--shoprite-yellow);
-            color: var(--dark-gray);
-            font-weight: 800;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: var(--transition);
-        }
-
-        .cart-trigger:hover {
-            transform: scale(1.05);
-            background: #ffffff;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            color: var(--white);
-            font-size: 1.8rem;
-        }
-
-        /* MAIN PAGE CONTAINERS */
-        main {
-            flex: 1;
-            max-width: 1200px;
-            width: 100%;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
-        }
-
         .page-section {
-            display: none; /* Controlled via JS tabs */
-            animation: fadeIn 0.4s ease-in-out;
+            display: none;
         }
-
         .page-section.active {
             display: block;
+            animation: fadeIn 0.3s ease-in-out;
         }
-
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* HERO & PROMOTIONAL BANNERS */
-        .hero-banner {
-            background: linear-gradient(135deg, var(--shoprite-red) 0%, var(--shoprite-red-dark) 100%);
-            color: var(--white);
-            padding: 3rem 2rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .hero-content {
-            max-width: 650px;
-        }
-
-        .hero-title {
-            font-size: 2.5rem;
-            font-weight: 900;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-            color: var(--white);
-        }
-
-        .hero-subtitle {
-            font-size: 1.15rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.95;
-        }
-
-        .cta-btn-group {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary {
-            background-color: var(--shoprite-yellow);
-            color: var(--dark-gray);
-            font-weight: 800;
-            padding: 0.8rem 1.8rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: var(--transition);
-            display: inline-block;
-        }
-
-        .btn-primary:hover {
-            background-color: #ffffff;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--white);
-            border: 2px solid var(--white);
-            font-weight: 700;
-            padding: 0.8rem 1.8rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--white);
-            color: var(--shoprite-red);
-        }
-
-        /* GRID LAYOUTS */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        /* CARDS & CONTAINERS */
-        .card {
-            background: var(--white);
-            border-radius: 8px;
-            padding: 1.5rem;
-            border: 1px solid var(--card-border);
-            box-shadow: var(--shadow);
-        }
-
-        .card-header {
-            border-bottom: 2px solid var(--shoprite-red);
-            padding-bottom: 0.8rem;
-            margin-bottom: 1.2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-title {
-            color: var(--shoprite-red);
-            font-size: 1.3rem;
-            font-weight: 800;
-        }
-
-        /* CAMPAIGN LAUNCH DASHBOARD SPECIFIC */
-        .campaign-hub {
-            background-color: #FFFDF0;
-            border: 2px dashed var(--shoprite-yellow-dark);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .campaign-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .campaign-tag {
-            background-color: var(--shoprite-red);
-            color: var(--white);
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            display: inline-block;
-            margin-bottom: 0.5rem;
-        }
-
-        /* WHATSAPP SIMULATOR */
-        .phone-mockup {
-            background-color: #E5DDD5;
-            border: 12px solid #333;
-            border-radius: 24px;
-            padding: 1rem;
-            max-width: 360px;
-            margin: 0 auto;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-        }
-
-        .phone-header {
-            background-color: #075E54;
-            color: white;
-            padding: 0.6rem 0.8rem;
-            border-radius: 8px 8px 0 0;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        .chat-body {
-            height: 280px;
-            overflow-y: auto;
-            padding: 0.8rem 0.4rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .chat-msg {
-            max-width: 80%;
-            padding: 0.6rem 0.8rem;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            position: relative;
-        }
-
-        .msg-in {
-            background-color: white;
-            align-self: flex-start;
-            border-top-left-radius: 0;
-        }
-
-        .msg-out {
-            background-color: #DCF8C6;
-            align-self: flex-end;
-            border-top-right-radius: 0;
-        }
-
-        .chat-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-            margin-top: 0.5rem;
-        }
-
-        .chat-opt-btn {
-            background: white;
-            border: 1px solid #075E54;
-            color: #075E54;
-            padding: 0.4rem;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            text-align: center;
-            transition: var(--transition);
-        }
-
-        .chat-opt-btn:hover {
-            background: #075E54;
-            color: white;
-        }
-
-        /* SPIN WHEEL SIMULATOR */
-        .wheel-container {
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .wheel-spinner {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            border: 8px solid var(--shoprite-red);
-            background: conic-gradient(
-                var(--shoprite-yellow) 0deg 90deg,
-                #fff 90deg 180deg,
-                var(--shoprite-yellow) 180deg 270deg,
-                #fff 270deg 360deg
-            );
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        .wheel-pointer {
-            position: absolute;
-            top: -15px;
-            width: 0;
-            height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-top: 20px solid var(--dark-gray);
-            z-index: 10;
-        }
-
-        /* PRODUCTS & CATALOGUE */
-        .product-card {
-            background: var(--white);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: var(--transition);
-        }
-
-        .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow);
-        }
-
-        .product-badge {
-            background-color: var(--shoprite-red);
-            color: var(--white);
-            font-size: 0.75rem;
-            font-weight: bold;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            align-self: flex-start;
-            margin-bottom: 0.5rem;
-        }
-
-        .product-title {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .product-price {
-            font-size: 1.3rem;
-            font-weight: 900;
-            color: var(--shoprite-red);
-            margin-bottom: 1rem;
-        }
-
-        .add-cart-btn {
-            background-color: var(--shoprite-yellow);
-            color: var(--dark-gray);
-            font-weight: 800;
-            padding: 0.6rem;
-            border-radius: 4px;
-            width: 100%;
-            transition: var(--transition);
-        }
-
-        .add-cart-btn:hover {
-            background-color: var(--shoprite-red);
-            color: var(--white);
-        }
-
-        /* MONEY MARKET TABS */
-        .mm-tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            overflow-x: auto;
-        }
-
-        .mm-tab-btn {
-            padding: 0.6rem 1.2rem;
-            background-color: #E2E8F0;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-
-        .mm-tab-btn.active {
-            background-color: var(--shoprite-red);
-            color: var(--white);
-        }
-
-        /* CUSTOMER JOURNEY TIMELINE */
-        .timeline {
-            position: relative;
-            padding-left: 2rem;
-            border-left: 4px solid var(--shoprite-red);
-        }
-
-        .timeline-item {
-            margin-bottom: 2rem;
-            position: relative;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -2.4rem;
-            top: 0;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background-color: var(--shoprite-yellow);
-            border: 4px solid var(--shoprite-red);
-        }
-
-        /* FORM STYLING */
-        .form-group {
-            margin-bottom: 1.2rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 700;
-            margin-bottom: 0.4rem;
-            font-size: 0.9rem;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.7rem;
-            border: 1px solid #CBD5E1;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--shoprite-red);
-            box-shadow: 0 0 0 3px rgba(224, 0, 0, 0.1);
-        }
-
-        .error-message {
-            color: var(--shoprite-red);
-            font-size: 0.8rem;
-            margin-top: 0.2rem;
-            display: none;
-        }
-
-        /* MODAL (MODAL DIALOG / AUTH OVERLAY) */
-        .modal-backdrop {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-card {
-            background: white;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 450px;
-            padding: 2rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            position: relative;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 1.5rem;
-            background: none;
-        }
-
-        /* FOOTER */
-        footer {
-            background-color: var(--dark-gray);
-            color: var(--white);
-            padding: 3rem 1.5rem 1.5rem 1.5rem;
-            margin-top: auto;
-        }
-
-        .footer-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-col h4 {
-            color: var(--shoprite-yellow);
-            margin-bottom: 1rem;
-        }
-
-        .footer-col ul {
-            list-style: none;
-        }
-
-        .footer-col li {
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            opacity: 0.85;
-        }
-
-        .footer-bottom {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding-top: 1.5rem;
-            border-top: 1px solid #444;
-            text-align: center;
-            font-size: 0.85rem;
-            opacity: 0.7;
-        }
-
-        /* RESPONSIVE DESIGN MEDIA QUERIES */
-        @media (max-width: 992px) {
-            .grid-4 { grid-template-columns: repeat(2, 1fr); }
-            .grid-3 { grid-template-columns: 1fr; }
-            .footer-grid { grid-template-columns: repeat(2, 1fr); }
-            .hero-banner { flex-direction: column; text-align: center; }
-            .cta-btn-group { justify-content: center; }
-        }
-
-        @media (max-width: 768px) {
-            .grid-2 { grid-template-columns: 1fr; }
-            .mobile-menu-btn { display: block; }
-            nav ul {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background-color: var(--shoprite-red);
-                flex-direction: column;
-                padding: 1rem;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            }
-            nav ul.mobile-active {
-                display: flex;
-            }
-            .footer-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
 
-    <!-- UTILITY AUTH BAR -->
-    <div class="utility-bar">
-        <span>🇿🇦 Welcome to Shoprite — Lower Prices You Can Trust Always</span>
-        <div class="auth-status-container">
-            <div id="auth-info" class="user-pill">Logged Out</div>
-            <button id="auth-toggle-btn" class="auth-btn" onclick="openAuthModal()">Sign In / Loyalty Login</button>
-        </div>
+    <!-- Top Announcement Bar -->
+    <div class="bg-brand-red text-white text-xs sm:text-sm py-2 px-4 text-center font-medium flex justify-between items-center max-w-full overflow-hidden">
+        <span class="mx-auto flex items-center gap-2">
+            <i class="fa-solid fa-fire text-brand-yellow"></i>
+            <span><strong>Grand Opening Specials!</strong> Save up to 25% on essential basket items this week.</span>
+        </span>
+        <button id="campaign-banner-btn" onclick="switchTab('campaign')" class="hidden md:inline-block bg-brand-yellow text-gray-900 text-xs px-3 py-1 rounded-full font-bold hover:bg-yellow-400 transition-all">
+            Launch Campaign Info
+        </button>
     </div>
 
-    <!-- MAIN ACCESSIBLE NAVIGATION HEADER -->
-    <header>
-        <div class="nav-container">
-            <a href="#home" class="brand-logo" onclick="switchPage('home')">
-                SHOPRITE <span class="logo-badge">Xtra Savings</span>
-            </a>
+    <!-- Main Navigation Header -->
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Brand Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="bg-brand-red text-white p-2.5 rounded-xl font-black text-2xl tracking-wider flex items-center justify-center shadow-lg">
+                        P<span class="text-brand-yellow">n</span>C
+                    </div>
+                    <div>
+                        <span class="text-xl sm:text-2xl font-black text-brand-red tracking-tight block leading-none">Pick n Cheaper</span>
+                        <span class="text-xs text-brand-green font-semibold tracking-widest uppercase">Supermarket</span>
+                    </div>
+                </div>
 
-            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle Navigation Menu">☰</button>
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <button onclick="switchTab('home')" class="nav-btn text-gray-700 hover:text-brand-red font-semibold transition-colors py-2 active-nav text-brand-red" data-target="home">Home</button>
+                    <button onclick="switchTab('products')" class="nav-btn text-gray-700 hover:text-brand-red font-semibold transition-colors py-2" data-target="products">Products & Services</button>
+                    <button onclick="switchTab('about')" class="nav-btn text-gray-700 hover:text-brand-red font-semibold transition-colors py-2" data-target="about">About Us</button>
+                    <button onclick="switchTab('contact')" class="nav-btn text-gray-700 hover:text-brand-red font-semibold transition-colors py-2" data-target="contact">Contact & Leads</button>
+                    <button onclick="switchTab('campaign')" class="nav-btn bg-brand-green text-white px-4 py-2 rounded-lg font-bold hover:bg-brand-lightGreen transition-all shadow-md flex items-center gap-2" data-target="campaign">
+                        <i class="fa-solid fa-rocket"></i> Campaign Hub
+                    </button>
+                </nav>
 
-            <nav>
-                <ul id="nav-list">
-                    <li><a href="#home" class="nav-link active" onclick="switchPage('home')">Home</a></li>
-                    <li><a href="#about" class="nav-link" onclick="switchPage('about')">About Us</a></li>
-                    <li><a href="#products" class="nav-link" onclick="switchPage('products')">Products & Services</a></li>
-                    <li><a href="#contact" class="nav-link" onclick="switchPage('contact')">Contact Us</a></li>
-                </ul>
-            </nav>
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="text-gray-700 hover:text-brand-red p-2 focus:outline-none" aria-label="Toggle Menu">
+                        <i class="fa-solid fa-bars text-2xl" id="menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
 
-            <button class="cart-trigger" onclick="openCartModal()">
-                🛒 Basket (<span id="cart-count">0</span>)
-            </button>
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 px-4 pt-2 pb-6 space-y-3 shadow-lg">
+            <button onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md font-semibold text-gray-700 hover:bg-gray-100">Home</button>
+            <button onclick="switchTab('products'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md font-semibold text-gray-700 hover:bg-gray-100">Products & Services</button>
+            <button onclick="switchTab('about'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md font-semibold text-gray-700 hover:bg-gray-100">About Us</button>
+            <button onclick="switchTab('contact'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md font-semibold text-gray-700 hover:bg-gray-100">Contact & Leads</button>
+            <button onclick="switchTab('campaign'); toggleMobileMenu();" class="block w-full text-center px-3 py-2.5 rounded-md font-bold bg-brand-green text-white">Digital Launch Campaign</button>
         </div>
     </header>
 
-    <main>
+    <!-- Main Content Container -->
+    <main class="flex-grow">
 
-        <!-- PAGE 1: HOME PAGE -->
-        <section id="home" class="page-section active">
-            
+        <!-- 1. HOME PAGE -->
+        <section id="page-home" class="page-section active">
             <!-- Hero Banner -->
-            <div class="hero-banner">
-                <div class="hero-content">
-                    <h1 class="hero-title">Get So Much More With The Shoprite Price</h1>
-                    <p class="hero-subtitle">Bringing South African households low-cost essential food, fresh groceries, and instant Xtra Savings every day.</p>
-                    <div class="cta-btn-group">
-                        <button class="btn-primary" onclick="switchPage('products')">Shop Weekly Deals</button>
-                        <button class="btn-secondary" onclick="scrollToCampaign()">Digital Launch Hub</button>
+            <div class="relative bg-gradient-to-r from-red-900 via-brand-red to-red-800 text-white overflow-hidden py-16 sm:py-24">
+                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="grid md:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <span class="inline-block bg-brand-yellow text-gray-900 font-extrabold text-xs uppercase px-3 py-1 rounded-full mb-4 shadow">
+                                Everyday Low Price Guarantee
+                            </span>
+                            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-none mb-6">
+                                Quality Food <br><span class="text-brand-yellow">Without The High Cost.</span>
+                            </h1>
+                            <p class="text-lg text-red-100 mb-8 max-w-xl">
+                                Welcome to Pick n Cheaper. Your neighborhood supermarket delivering high-quality fresh produce, daily baked goods, and household essentials at prices your family budget will love.
+                            </p>
+                            <div class="flex flex-wrap gap-4">
+                                <button onclick="switchTab('products')" class="bg-brand-yellow text-gray-900 font-extrabold px-6 py-3.5 rounded-xl shadow-lg hover:bg-yellow-400 transition-all transform hover:-translate-y-0.5">
+                                    Shop Special Categories
+                                </button>
+                                <button onclick="openPromoModal()" class="bg-white/10 backdrop-blur border border-white/30 text-white font-bold px-6 py-3.5 rounded-xl hover:bg-white/20 transition-all">
+                                    <i class="fa-solid fa-gift text-brand-yellow mr-2"></i> Claim Voucher
+                                </button>
+                            </div>
+                        </div>
+                        <div class="relative hidden md:block">
+                            <div class="bg-white/10 p-6 rounded-3xl border border-white/20 shadow-2xl backdrop-blur-sm text-center">
+                                <i class="fa-solid fa-basket-shopping text-8xl text-brand-yellow mb-4 animate-bounce"></i>
+                                <h3 class="text-2xl font-bold text-white mb-2">Smart Grocery Shopping</h3>
+                                <p class="text-red-100 text-sm">Calculate your monthly grocery savings and organize your cart before you set foot in our aisles!</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- DIGITAL LAUNCH CAMPAIGN HUB INTEGRATION -->
-            <div id="campaign-hub-section" class="campaign-hub">
-                <div class="campaign-header">
-                    <span class="campaign-tag">Digital Marketing Team Launch</span>
-                    <h2>"Xtra Value Everyday" Launch Campaign</h2>
-                    <p>Experience how our digital launch strategies connect mass-market shoppers directly to real savings.</p>
-                </div>
+            <!-- Interactive Feature: Mini Savings Calculator -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+                <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
+                    <div class="text-center max-w-2xl mx-auto mb-8">
+                        <span class="text-brand-green font-bold text-sm uppercase tracking-wider">Interactive Tool</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900">Mini Savings Calculator</h2>
+                        <p class="text-gray-600 text-sm mt-1">See how much you can save every month by switching your primary grocery shopping to Pick n Cheaper.</p>
+                    </div>
 
-                <div class="grid-3">
+                    <div class="grid md:grid-cols-12 gap-8 items-center">
+                        <div class="md:col-span-7 space-y-6">
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <label for="monthly-spend" class="font-bold text-gray-700">Current Monthly Grocery Spend (ZAR):</label>
+                                    <span id="spend-display" class="text-xl font-black text-brand-red">R 4,500</span>
+                                </div>
+                                <input type="range" id="monthly-spend" min="1000" max="15000" step="250" value="4500" 
+                                       class="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand-red"
+                                       oninput="updateSavingsCalculator()">
+                                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                    <span>R 1,000</span>
+                                    <span>R 7,500</span>
+                                    <span>R 15,000+</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="family-size" class="font-bold text-gray-700 block mb-2">Household Size:</label>
+                                <select id="family-size" onchange="updateSavingsCalculator()" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 font-medium text-gray-800 focus:ring-2 focus:ring-brand-red focus:outline-none">
+                                    <option value="1">Single / Individual (1 Person)</option>
+                                    <option value="2">Couple (2 People)</option>
+                                    <option value="4" selected>Family Household (3-4 People)</option>
+                                    <option value="6">Large Family Household (5+ People)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Output Box -->
+                        <div class="md:col-span-5 bg-gradient-to-br from-green-50 to-emerald-100 rounded-2xl p-6 border border-green-200 text-center flex flex-col justify-center">
+                            <h3 class="text-xs font-bold text-brand-green uppercase tracking-wider mb-2">Estimated Grocery Savings</h3>
+                            <div class="my-2">
+                                <span class="text-xs text-gray-500 block">Monthly Savings</span>
+                                <span id="monthly-savings-val" class="text-4xl font-black text-brand-green">R 810</span>
+                            </div>
+                            <hr class="border-green-200 my-3">
+                            <div>
+                                <span class="text-xs text-gray-500 block">Estimated Annual Savings</span>
+                                <span id="annual-savings-val" class="text-2xl font-bold text-gray-800">R 9,720</span>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-4 italic">*Based on average 18% price comparison against traditional national supermarkets.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Value Pillars Section -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
+                        <div class="w-14 h-14 bg-red-100 text-brand-red rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                            <i class="fa-solid fa-apple-whole"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Daily Fresh Harvest</h3>
+                        <p class="text-gray-600 text-sm">Directly sourced from local farmers to guarantee farm-fresh produce delivered every morning.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
+                        <div class="w-14 h-14 bg-yellow-100 text-brand-yellow text-gray-900 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                            <i class="fa-solid fa-tags"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Cheaper Value Brands</h3>
+                        <p class="text-gray-600 text-sm">Our exclusive white-label line provides uncompromised staple quality at unmatched low prices.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 text-center hover:shadow-md transition-shadow">
+                        <div class="w-14 h-14 bg-green-100 text-brand-green rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                            <i class="fa-solid fa-money-bill-transfer"></i>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">All-In-One Pay Point</h3>
+                        <p class="text-gray-600 text-sm">Pay municipal bills, buy electricity, buy airtime, and withdraw cash right at our till counters.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. PRODUCTS & SERVICES PAGE -->
+        <section id="page-products" class="page-section">
+            <div class="bg-gray-900 text-white py-12">
+                <div class="max-w-7xl mx-auto px-4 text-center">
+                    <h1 class="text-3xl sm:text-4xl font-extrabold mb-2">Our Supermarket Offerings</h1>
+                    <p class="text-gray-400 text-sm max-w-xl mx-auto">Browse our department catalog and filter items to plan your budget efficiently.</p>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <!-- Grid Layout: Product Filter on Left, Shopping List on Right -->
+                <div class="grid lg:grid-cols-12 gap-8">
                     
-                    <!-- Strategy Pillar 1: WhatsApp Commerce -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">1. WhatsApp Commerce</h3>
+                    <!-- LEFT: Dynamic Product Filter Section (7 Cols) -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-4 rounded-xl border border-gray-200">
+                            <h2 class="font-bold text-lg text-gray-800">Departments Catalog</h2>
+                            
+                            <!-- Dynamic Product Filter Buttons -->
+                            <div class="flex flex-wrap gap-1.5" id="category-filter-container">
+                                <button onclick="filterCategory('all')" class="cat-filter-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-brand-red text-white" data-cat="all">All</button>
+                                <button onclick="filterCategory('produce')" class="cat-filter-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-cat="produce">Fresh Produce</button>
+                                <button onclick="filterCategory('cheaper')" class="cat-filter-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-cat="cheaper">Cheaper Value</button>
+                                <button onclick="filterCategory('bakery')" class="cat-filter-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-cat="bakery">Bakery</button>
+                                <button onclick="filterCategory('paypoint')" class="cat-filter-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-cat="paypoint">Pay Point</button>
+                            </div>
                         </div>
-                        <p style="font-size:0.9rem; margin-bottom:1rem;">Zero-data friendly flyer distribution & instant balance lookup via South Africa's most used platform.</p>
-                        
-                        <!-- Phone Mockup -->
-                        <div class="phone-mockup">
-                            <div class="phone-header">📱 Shoprite WhatsApp Bot</div>
-                            <div class="chat-body" id="chat-body">
-                                <div class="chat-msg msg-in">Hala! Welcome to Shoprite Xtra Savings on WhatsApp. What would you like to do?</div>
-                            </div>
-                            <div class="chat-actions">
-                                <button class="chat-opt-btn" onclick="sendChatMessage('Check Savings Balance', 'Your Xtra Savings Balance is R84.50. You saved R18.00 this week!')">Check Savings Balance</button>
-                                <button class="chat-opt-btn" onclick="sendChatMessage('Get Weekly Leaflet', '📄 Here is this week\'s deal leaflet: Shoprite_Weekly_Deals.pdf')">Get Weekly Deals</button>
-                            </div>
+
+                        <!-- Product Grid Render Container -->
+                        <div id="product-grid" class="grid sm:grid-cols-2 gap-4">
+                            <!-- Populated dynamically via JS -->
                         </div>
                     </div>
 
-                    <!-- Strategy Pillar 2: Gamified Rewards (Spin & Win) -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">2. Gamified Rewards</h3>
-                        </div>
-                        <p style="font-size:0.9rem; margin-bottom:1rem;">Drive daily app engagement with our interactive "Spin & Win" discount wheel.</p>
+                    <!-- RIGHT: Interactive Digital Shopping List (5 Cols) -->
+                    <div class="lg:col-span-5">
+                        <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 sticky top-24">
+                            <div class="flex justify-between items-center mb-4 pb-3 border-b">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-list-check text-brand-red text-xl"></i>
+                                    <h2 class="font-extrabold text-xl text-gray-900">Digital Shopping List</h2>
+                                </div>
+                                <button onclick="clearShoppingList()" class="text-xs text-red-600 hover:underline font-bold">
+                                    <i class="fa-solid fa-trash-can mr-1"></i> Clear All
+                                </button>
+                            </div>
 
-                        <div class="wheel-container">
-                            <div style="position:relative;">
-                                <div class="wheel-pointer"></div>
-                                <div class="wheel-spinner" id="spin-wheel">SPIN</div>
-                            </div>
-                            <button class="btn-primary" onclick="spinWheel()" style="margin-top:1rem;">Spin for Discounts</button>
-                            <p id="wheel-result" style="font-size:0.85rem; font-weight:bold; margin-top:0.5rem; color:var(--shoprite-red);"></p>
-                        </div>
-                    </div>
+                            <!-- Form to Add Custom Item -->
+                            <form id="add-list-item-form" onsubmit="addCustomListItem(event)" class="mb-4 space-y-2">
+                                <div class="grid grid-cols-12 gap-2">
+                                    <input type="text" id="custom-item-name" placeholder="Item name (e.g. Full Cream Milk)" required class="col-span-7 px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-brand-red focus:outline-none">
+                                    <input type="number" id="custom-item-price" placeholder="R Price" min="0" step="0.5" required class="col-span-5 px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:ring-brand-red focus:outline-none">
+                                </div>
+                                <div class="flex gap-2">
+                                    <select id="custom-item-cat" class="w-full px-3 py-1.5 text-xs border rounded-lg bg-gray-50">
+                                        <option value="Groceries">Groceries</option>
+                                        <option value="Fresh Produce">Fresh Produce</option>
+                                        <option value="Bakery">Bakery</option>
+                                        <option value="Services">Services</option>
+                                    </select>
+                                    <button type="submit" class="bg-brand-red text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-brand-darkRed transition-colors whitespace-nowrap">
+                                        + Add Item
+                                    </button>
+                                </div>
+                            </form>
 
-                    <!-- Strategy Pillar 3: Marketing Analytics & Impact -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">3. Target Reach & Impact</h3>
-                        </div>
-                        <div style="display:flex; flex-direction:column; gap:1rem;">
-                            <div style="background:#fff; padding:0.8rem; border-radius:6px; border-left:4px solid var(--shoprite-red);">
-                                <strong style="font-size:1.2rem;">2.5M+</strong>
-                                <p style="font-size:0.85rem;">Active WhatsApp Subscriptions targeted</p>
+                            <!-- Shopping List Items Display -->
+                            <div id="shopping-list-container" class="space-y-2 max-h-72 overflow-y-auto pr-1 my-4">
+                                <!-- Dynamic Items Added Here -->
                             </div>
-                            <div style="background:#fff; padding:0.8rem; border-radius:6px; border-left:4px solid var(--shoprite-yellow-dark);">
-                                <strong style="font-size:1.2rem;">15.4%</strong>
-                                <p style="font-size:0.85rem;">Higher voucher redemption via instant games</p>
-                            </div>
-                            <div style="background:#fff; padding:0.8rem; border-radius:6px; border-left:4px solid var(--green);">
-                                <strong style="font-size:1.2rem;">LSM / SEM 3–7</strong>
-                                <p style="font-size:0.85rem;">Mass-market core customer reach</p>
+
+                            <!-- Total Budget Calculation Box -->
+                            <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                                <div class="flex justify-between items-center text-sm mb-1">
+                                    <span class="text-gray-600 font-medium">Total Items:</span>
+                                    <span id="list-item-count" class="font-bold">0</span>
+                                </div>
+                                <div class="flex justify-between items-center text-lg font-black text-gray-900">
+                                    <span>Estimated Total Budget:</span>
+                                    <span id="list-total-price" class="text-brand-green">R 0.00</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                 </div>
             </div>
-
-            <!-- Quick Deals Showcase Grid -->
-            <h2 style="margin-bottom:1rem; border-left: 6px solid var(--shoprite-red); padding-left:0.6rem;">Featured Xtra Savings Deals</h2>
-            <div class="grid-4" id="home-featured-products">
-                <!-- Injected dynamically via JS -->
-            </div>
-
         </section>
 
-
-        <!-- PAGE 2: ABOUT US PAGE -->
-        <section id="about" class="page-section">
-            <div class="card" style="margin-bottom:2rem;">
-                <div class="card-header">
-                    <h2 class="card-title">About Shoprite</h2>
-                </div>
-                <p style="margin-bottom:1rem;">Shoprite is South Africa's largest food retailer, dedicated to delivering affordable, high-quality groceries and household goods to budget-conscious households across the country and continent.</p>
-            </div>
-
-            <div class="grid-2">
-                <!-- Problem Solved -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">The Market Problem We Solve</h3>
-                    </div>
-                    <ul style="padding-left:1.2rem; line-height:1.8;">
-                        <li><strong>High Food Inflation:</strong> Offsetting rising cost-of-living pressure for vulnerable income groups.</li>
-                        <li><strong>Food Security:</strong> Guaranteeing steady access to nutritious bulk staples in urban and peri-urban regions.</li>
-                        <li><strong>Financial Inclusion:</strong> Offering accessible non-banking services via our Money Market counters.</li>
-                    </ul>
-                </div>
-
-                <!-- Live Authenticated Target Profile -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Active Shopper Account Card</h3>
-                    </div>
-                    <div id="about-auth-card">
-                        <!-- Populated by JS based on login state -->
-                    </div>
+        <!-- 3. ABOUT US PAGE -->
+        <section id="page-about" class="page-section">
+            <div class="bg-brand-red text-white py-12">
+                <div class="max-w-7xl mx-auto px-4 text-center">
+                    <h1 class="text-3xl sm:text-4xl font-extrabold mb-2">About Pick n Cheaper</h1>
+                    <p class="text-red-100 text-sm max-w-xl mx-auto">Dedicated to serving everyday South African families with affordability and quality.</p>
                 </div>
             </div>
 
-            <!-- Customer Journey Section -->
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">The Shoprite Customer Journey</h3>
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">Our Store Story</h2>
+                        <p class="text-gray-600 leading-relaxed text-sm mb-4">
+                            Pick n Cheaper was launched with a singular mission: to make everyday essential groceries accessible and genuinely affordable for every community we serve.
+                        </p>
+                        <p class="text-gray-600 leading-relaxed text-sm">
+                            We bypass unnecessary middlemen and work directly with local farmers and bulk manufacturers, cutting down costs so we can pass savings straight to your shopping basket.
+                        </p>
+                    </div>
+                    <div class="bg-gray-100 p-8 rounded-2xl border border-gray-200 text-center">
+                        <i class="fa-solid fa-store text-6xl text-brand-red mb-4"></i>
+                        <h3 class="font-bold text-xl text-gray-800">Community First Supermarket</h3>
+                        <p class="text-gray-500 text-xs mt-2">Serving local families with honest pricing and friendly smiles daily.</p>
+                    </div>
                 </div>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <h4>1. Discovery & Awareness</h4>
-                        <p>Customers discover deals through weekly WhatsApp alerts, digital flyers, local radio, or physical promotional leaflets.</p>
-                    </div>
-                    <div class="timeline-item">
-                        <h4>2. Smart Budget Planning</h4>
-                        <p>Shoppers compare item prices and calculate Xtra Savings discounts upfront before entering the store.</p>
-                    </div>
-                    <div class="timeline-item">
-                        <h4>3. In-Store / Digital Purchase</h4>
-                        <p>Items are purchased, and instant discounts are applied by swiping the Xtra Savings card or scanning the phone app at checkout.</p>
-                    </div>
-                    <div class="timeline-item">
-                        <h4>4. Post-Purchase Value</h4>
-                        <p>Shoppers verify till-slip savings and top up prepaid utilities at the Money Market counter during the same visit.</p>
+
+                <div class="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6 text-center">Our Core Commitments</h2>
+                    <div class="grid sm:grid-cols-3 gap-6">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-red-100 text-brand-red rounded-xl flex items-center justify-center mx-auto mb-3 font-black text-xl">1</div>
+                            <h3 class="font-bold text-gray-800 mb-1">Price Transparency</h3>
+                            <p class="text-xs text-gray-500">No hidden price markups or misleading promotions.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-yellow-100 text-yellow-800 rounded-xl flex items-center justify-center mx-auto mb-3 font-black text-xl">2</div>
+                            <h3 class="font-bold text-gray-800 mb-1">Freshness First</h3>
+                            <p class="text-xs text-gray-500">Daily quality control inspections across bakery and produce.</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-green-100 text-brand-green rounded-xl flex items-center justify-center mx-auto mb-3 font-black text-xl">3</div>
+                            <h3 class="font-bold text-gray-800 mb-1">Empowering Locals</h3>
+                            <p class="text-xs text-gray-500">Sourcing produce directly from regional South African farmers.</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-
-        <!-- PAGE 3: PRODUCTS & SERVICES PAGE -->
-        <section id="products" class="page-section">
-            
-            <h2 style="margin-bottom:1rem;">Grocery Departments & Promotions</h2>
-            
-            <!-- Category Filter Buttons -->
-            <div style="display:flex; gap:0.5rem; margin-bottom:1.5rem; flex-wrap:wrap;">
-                <button class="mm-tab-btn active" onclick="filterProducts('all', this)">All Items</button>
-                <button class="mm-tab-btn" onclick="filterProducts('staples', this)">Staples & Grains</button>
-                <button class="mm-tab-btn" onclick="filterProducts('fresh', this)">Fresh Produce & Butchery</button>
-                <button class="mm-tab-btn" onclick="filterProducts('pantry', this)">Pantry Essentials</button>
-            </div>
-
-            <!-- Full Product Grid -->
-            <div class="grid-4" id="full-product-grid">
-                <!-- Injected dynamically via JS -->
-            </div>
-
-            <!-- Shoprite Money Market Services -->
-            <div class="card" style="margin-top:3rem;">
-                <div class="card-header">
-                    <h2 class="card-title">Money Market Services</h2>
-                </div>
-                <p style="margin-bottom:1rem;">Pay bills, transfer funds, or top up utilities safely in-store or online.</p>
-
-                <div class="mm-tabs">
-                    <button class="mm-tab-btn active" onclick="switchMMTab('electricity', this)">Prepaid Electricity</button>
-                    <button class="mm-tab-btn" onclick="switchMMTab('transfers', this)">Money Transfers</button>
-                    <button class="mm-tab-btn" onclick="switchMMTab('airtime', this)">Airtime & Data</button>
-                </div>
-
-                <div id="mm-tab-content" style="background:#F8FAFC; padding:1.5rem; border-radius:8px;">
-                    <!-- JS renders active tab form -->
+        <!-- 4. CONTACT & LEAD GEN PAGE -->
+        <section id="page-contact" class="page-section">
+            <div class="bg-gray-900 text-white py-12">
+                <div class="max-w-7xl mx-auto px-4 text-center">
+                    <h1 class="text-3xl sm:text-4xl font-extrabold mb-2">Contact Us & Club SignUp</h1>
+                    <p class="text-gray-400 text-sm max-w-xl mx-auto">Get in touch with customer support or sign up for exclusive digital discount vouchers.</p>
                 </div>
             </div>
 
-        </section>
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 sm:p-10">
+                    <div id="form-alert" class="hidden mb-6 p-4 rounded-xl text-sm font-bold"></div>
 
-
-        <!-- PAGE 4: CONTACT US & LEAD GENERATION PAGE -->
-        <section id="contact" class="page-section">
-            
-            <div class="grid-2">
-                
-                <!-- Contact Form with JS Validation -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Get in Touch with Us</h2>
-                    </div>
-                    <form id="contact-form" onsubmit="validateContactForm(event)" novalidate>
-                        <div class="form-group">
-                            <label for="contact-name">Full Name *</label>
-                            <input type="text" id="contact-name" class="form-control" placeholder="e.g. Lerato Ndlovu">
-                            <div class="error-message" id="err-name">Please enter your full name.</div>
+                    <form id="contact-lead-form" onsubmit="handleContactSubmit(event)" class="space-y-6">
+                        <div class="grid sm:grid-cols-2 gap-6">
+                            <div>
+                                <label for="contact-name" class="block text-xs font-bold uppercase text-gray-700 mb-1">Full Name *</label>
+                                <input type="text" id="contact-name" required placeholder="e.g. Thabo Mokoena" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-red focus:outline-none">
+                            </div>
+                            <div>
+                                <label for="contact-email" class="block text-xs font-bold uppercase text-gray-700 mb-1">Email Address *</label>
+                                <input type="email" id="contact-email" required placeholder="name@example.co.za" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-red focus:outline-none">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="contact-email">Email Address *</label>
-                            <input type="email" id="contact-email" class="form-control" placeholder="e.g. lerato@example.co.za">
-                            <div class="error-message" id="err-email">Please enter a valid email address.</div>
+                        <div class="grid sm:grid-cols-2 gap-6">
+                            <div>
+                                <label for="contact-phone" class="block text-xs font-bold uppercase text-gray-700 mb-1">Phone Number (Optional)</label>
+                                <input type="tel" id="contact-phone" placeholder="082 123 4567" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-red focus:outline-none">
+                            </div>
+                            <div>
+                                <label for="contact-branch" class="block text-xs font-bold uppercase text-gray-700 mb-1">Preferred Store Branch</label>
+                                <select id="contact-branch" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-red focus:outline-none bg-white">
+                                    <option value="Cape Town Central">Cape Town Central</option>
+                                    <option value="Bellville Hub">Bellville Hub</option>
+                                    <option value="Mitchells Plain">Mitchells Plain Store</option>
+                                    <option value="General Inquiry">General Customer Care</option>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="contact-category">Enquiry Type *</label>
-                            <select id="contact-category" class="form-control">
-                                <option value="">-- Select Category --</option>
-                                <option value="xtra">Xtra Savings Card Query</option>
-                                <option value="moneymarket">Money Market Services</option>
-                                <option value="store">Store Experience / Feedback</option>
-                            </select>
-                            <div class="error-message" id="err-category">Please select an enquiry category.</div>
+                        <div>
+                            <label for="contact-message" class="block text-xs font-bold uppercase text-gray-700 mb-1">Message or Query *</label>
+                            <textarea id="contact-message" rows="4" required placeholder="How can our customer service team help you today?" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-brand-red focus:outline-none"></textarea>
                         </div>
 
-                        <div class="form-group">
-                            <label for="contact-message">Message *</label>
-                            <textarea id="contact-message" class="form-control" rows="4" placeholder="How can we assist you?"></textarea>
-                            <div class="error-message" id="err-message">Please enter your message.</div>
+                        <!-- POPIA Consent Compliance Checkbox -->
+                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-2">
+                            <label class="flex items-start gap-3 cursor-pointer">
+                                <input type="checkbox" id="popia-consent" required class="mt-1 h-4 w-4 text-brand-red focus:ring-brand-red border-gray-300 rounded">
+                                <span class="text-xs text-gray-600 leading-relaxed">
+                                    <strong>POPIA Compliance Consent:</strong> I agree to Pick n Cheaper storing and processing my contact information solely for responding to this query and receiving weekly discount promotions. We respect your privacy and will never share your personal information.
+                                </span>
+                            </label>
                         </div>
 
-                        <button type="submit" class="btn-primary" style="width:100%;">Send Enquiry</button>
+                        <button type="submit" class="w-full bg-brand-red text-white font-bold py-4 rounded-xl shadow-lg hover:bg-brand-darkRed transition-colors">
+                            Submit Inquiry & Get VIP Vouchers
+                        </button>
                     </form>
                 </div>
+            </div>
+        </section>
 
-                <!-- Store Locator & Head Office Details -->
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">Find Your Local Store</h2>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="store-search">Search Suburb or City</label>
-                        <input type="text" id="store-search" class="form-control" placeholder="e.g. Soweto, Cape Town, Durban..." oninput="filterStores()">
-                    </div>
+        <!-- 5. INTEGRATED DIGITAL LAUNCH CAMPAIGN PANEL -->
+        <section id="page-campaign" class="page-section">
+            <div class="bg-gradient-to-r from-gray-900 to-brand-darkRed text-white py-12">
+                <div class="max-w-7xl mx-auto px-4 text-center">
+                    <span class="bg-brand-yellow text-gray-900 font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">Marketing Strategy Brief</span>
+                    <h1 class="text-3xl sm:text-4xl font-extrabold mb-2">Digital Launch Campaign Hub</h1>
+                    <p class="text-gray-300 text-sm max-w-2xl mx-auto">Strategic framework, promotional launch timeline, and target demographic positioning for Pick n Cheaper.</p>
+                </div>
+            </div>
 
-                    <div id="store-results" style="display:flex; flex-direction:column; gap:0.8rem; max-height:280px; overflow-y:auto; margin-bottom:1.5rem;">
-                        <!-- Store listings rendered via JS -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+                <!-- Strategic Core Grid -->
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+                        <div class="text-brand-red text-2xl font-black mb-2"><i class="fa-solid fa-bullseye mr-2"></i> Target Audience</div>
+                        <p class="text-xs text-gray-600 leading-relaxed">Price-conscious South African households, family meal planners, local township/suburban shoppers seeking genuine food inflation relief.</p>
                     </div>
-
-                    <div style="border-top:1px solid #CBD5E1; padding-top:1rem; font-size:0.9rem;">
-                        <strong>Shoprite Head Office Address:</strong><br>
-                        Cnr William Dabbs & Old Paarl Roads, Brackenfell, 7560<br>
-                        <strong>Customer Care Line:</strong> 0800 010 709
+                    <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+                        <div class="text-brand-green text-2xl font-black mb-2"><i class="fa-solid fa-chart-line mr-2"></i> Campaign Goal</div>
+                        <p class="text-xs text-gray-600 leading-relaxed">Drive initial foot traffic for retail store opening, capture 5,000 lead signups via promotional discount popup, and establish value perception.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+                        <div class="text-brand-yellow text-gray-900 text-2xl font-black mb-2"><i class="fa-solid fa-share-nodes mr-2"></i> Key Channels</div>
+                        <p class="text-xs text-gray-600 leading-relaxed">Meta Ads (Facebook/Instagram), WhatsApp VIP Broadcast Channel, Local Radio Spotlights, and In-Store Interactive Digital Kiosks.</p>
                     </div>
                 </div>
 
-            </div>
+                <!-- Launch Campaign Strategy Timeline -->
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200">
+                    <h2 class="text-2xl font-extrabold text-gray-900 mb-6">4-Week Launch Rollout Plan</h2>
+                    
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 bg-brand-red text-white font-bold rounded-full flex items-center justify-center shrink-0">W1</div>
+                                <div class="w-0.5 bg-gray-200 h-full mt-2"></div>
+                            </div>
+                            <div class="pb-6">
+                                <h3 class="font-bold text-gray-800 text-base">Week 1: Teaser & VIP List Building</h3>
+                                <p class="text-xs text-gray-600 mt-1">Deploy interactive web popup offering R50 off vouchers for early registrations. Run localized social media teaser ads.</p>
+                            </div>
+                        </div>
 
+                        <div class="flex gap-4">
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 bg-brand-yellow text-gray-900 font-bold rounded-full flex items-center justify-center shrink-0">W2</div>
+                                <div class="w-0.5 bg-gray-200 h-full mt-2"></div>
+                            </div>
+                            <div class="pb-6">
+                                <h3 class="font-bold text-gray-800 text-base">Week 2: Official Grand Opening</h3>
+                                <p class="text-xs text-gray-600 mt-1">Ribbon cutting event, live broadcast on local radio station, instant doorbuster deals on Cheaper Value staple goods.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 bg-brand-green text-white font-bold rounded-full flex items-center justify-center shrink-0">W3</div>
+                                <div class="w-0.5 bg-gray-200 h-full mt-2"></div>
+                            </div>
+                            <div class="pb-6">
+                                <h3 class="font-bold text-gray-800 text-base">Week 3: Digital Savings Calculator Push</h3>
+                                <p class="text-xs text-gray-600 mt-1">Promote online digital shopping list and savings calculator tool to demonstrate recurring customer savings.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 bg-gray-800 text-white font-bold rounded-full flex items-center justify-center shrink-0">W4</div>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-gray-800 text-base">Week 4: Loyalty Program Activation</h3>
+                                <p class="text-xs text-gray-600 mt-1">Transition campaign participants into permanent Pick n Cheaper Smart Shopper WhatsApp Club for ongoing weekly deals.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
     </main>
 
-    <!-- AUTHENTICATION MODAL DIALOG -->
-    <div id="auth-modal" class="modal-backdrop">
-        <div class="modal-card">
-            <button class="close-modal" onclick="closeAuthModal()">✕</button>
-            <h2 style="color:var(--shoprite-red); margin-bottom:1rem;" id="modal-auth-title">Sign In to Xtra Savings</h2>
-            
-            <form id="login-form" onsubmit="handleAuthSubmit(event)">
-                <div class="form-group">
-                    <label>Xtra Savings Card Number or Email</label>
-                    <input type="text" id="login-id" class="form-control" placeholder="Enter card or email" required>
-                </div>
-                <div class="form-group">
-                    <label>Password / Pin</label>
-                    <input type="password" id="login-pin" class="form-control" placeholder="••••" required>
-                </div>
-                <button type="submit" class="btn-primary" style="width:100%; margin-bottom:1rem;">Sign In</button>
-            </form>
+    <!-- Interactive Feature: Promotional Modal Popup -->
+    <div id="promo-modal" class="fixed inset-0 bg-black/60 modal-blur z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl relative border border-gray-100 transform transition-all">
+            <!-- Close Button -->
+            <button onclick="closePromoModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
 
-            <button class="btn-secondary" style="width:100%; color:var(--dark-gray); border-color:#ccc;" onclick="demoQuickLogin()">⚡ Quick Demo Login</button>
+            <div class="text-center">
+                <span class="inline-block bg-red-100 text-brand-red text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+                    Exclusive Web Offer
+                </span>
+                <h3 class="text-2xl font-black text-gray-900 mb-2">Claim R50 Off Your First Basket!</h3>
+                <p class="text-gray-600 text-xs mb-4">Subscribe to our weekly specials list or spend R300+ in-store to redeem your launch voucher.</p>
+
+                <!-- Live Dynamic Countdown Timer -->
+                <div class="bg-gray-900 text-white rounded-2xl p-4 mb-6">
+                    <span class="text-xs uppercase text-gray-400 font-bold block mb-2">Offer Expires In:</span>
+                    <div class="flex justify-center gap-4 text-center font-mono">
+                        <div>
+                            <span id="timer-hours" class="text-2xl font-black text-brand-yellow">02</span>
+                            <span class="text-[10px] block text-gray-400">HRS</span>
+                        </div>
+                        <span class="text-xl font-bold text-gray-600">:</span>
+                        <div>
+                            <span id="timer-minutes" class="text-2xl font-black text-brand-yellow">14</span>
+                            <span class="text-[10px] block text-gray-400">MINS</span>
+                        </div>
+                        <span class="text-xl font-bold text-gray-600">:</span>
+                        <div>
+                            <span id="timer-seconds" class="text-2xl font-black text-brand-yellow">45</span>
+                            <span class="text-[10px] block text-gray-400">SECS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Claim Form inside Modal -->
+                <div id="modal-claim-box">
+                    <input type="email" id="modal-email" placeholder="Enter email to get voucher code" class="w-full px-4 py-3 text-sm border rounded-xl mb-3 focus:ring-2 focus:ring-brand-red focus:outline-none">
+                    <button onclick="claimDiscountVoucher()" class="w-full bg-brand-green text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-brand-lightGreen transition-colors">
+                        Claim Voucher Now
+                    </button>
+                </div>
+
+                <!-- Claim Success Box -->
+                <div id="modal-success-box" class="hidden bg-green-50 text-brand-green p-4 rounded-xl border border-green-200">
+                    <i class="fa-solid fa-circle-check text-3xl mb-2"></i>
+                    <h4 class="font-bold text-base">Voucher Claimed!</h4>
+                    <p class="text-xs mt-1">Your code is: <strong class="bg-white px-2 py-1 rounded border text-gray-900">CHEAPER50</strong></p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- CART MODAL DIALOG -->
-    <div id="cart-modal" class="modal-backdrop">
-        <div class="modal-card" style="max-width:550px;">
-            <button class="close-modal" onclick="closeCartModal()">✕</button>
-            <h2 style="color:var(--shoprite-red); margin-bottom:1rem;">Your Shopping Basket</h2>
-            
-            <div id="cart-items-container" style="max-height:250px; overflow-y:auto; margin-bottom:1rem;">
-                <!-- Cart items rendered via JS -->
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 text-sm py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-3">
+                <div class="text-white font-black text-xl flex items-center gap-2">
+                    <span class="bg-brand-red text-white p-1.5 rounded-lg text-sm">PnC</span> Pick n Cheaper
+                </div>
+                <p class="text-xs text-gray-400">Your trusted South African neighborhood supermarket providing fresh food at lower costs.</p>
             </div>
-
-            <div style="background:#FFFDF0; padding:1rem; border-radius:6px; border:1px solid var(--shoprite-yellow-dark); margin-bottom:1rem;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
-                    <span>Subtotal:</span>
-                    <strong id="cart-subtotal">R0.00</strong>
-                </div>
-                <div style="display:flex; justify-content:space-between; color:var(--green); font-weight:bold; margin-bottom:0.4rem;">
-                    <span>Xtra Savings Discount:</span>
-                    <span id="cart-discount">-R0.00</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; font-size:1.2rem; font-weight:900; border-top:1px solid #ddd; padding-top:0.4rem; color:var(--shoprite-red);">
-                    <span>Total Due:</span>
-                    <span id="cart-total">R0.00</span>
-                </div>
-            </div>
-
-            <button class="btn-primary" style="width:100%;" onclick="checkoutCart()">Proceed to Checkout</button>
-        </div>
-    </div>
-
-    <!-- FOOTER -->
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h4>Shoprite Group</h4>
-                <ul>
-                    <li><a href="#about" onclick="switchPage('about')">About Us</a></li>
-                    <li><a href="https://www.shopriteholdings.co.za" target="_blank" rel="noopener">Shoprite Holdings</a></li>
-                    <li><a href="#about" onclick="switchPage('about')">Careers & Bursaries</a></li>
+            <div>
+                <h4 class="text-white font-bold mb-3 text-xs uppercase tracking-wider">Quick Navigation</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><button onclick="switchTab('home')" class="hover:text-white">Home Page</button></li>
+                    <li><button onclick="switchTab('products')" class="hover:text-white">Products Catalog</button></li>
+                    <li><button onclick="switchTab('about')" class="hover:text-white">About Supermarket</button></li>
+                    <li><button onclick="switchTab('contact')" class="hover:text-white">Contact & Support</button></li>
                 </ul>
             </div>
-            <div class="footer-col">
-                <h4>Customer Support</h4>
-                <ul>
-                    <li><a href="#contact" onclick="switchPage('contact')">Store Locator</a></li>
-                    <li><a href="#contact" onclick="switchPage('contact')">Contact Us</a></li>
-                    <li><a href="#contact" onclick="switchPage('contact')">FAQ & Help</a></li>
-                </ul>
+            <div>
+                <h4 class="text-white font-bold mb-3 text-xs uppercase tracking-wider">Customer Support</h4>
+                <p class="text-xs mb-1"><i class="fa-solid fa-phone text-brand-red mr-2"></i> 0800 123 4567</p>
+                <p class="text-xs mb-1"><i class="fa-solid fa-envelope text-brand-red mr-2"></i> support@pickncheaper.co.za</p>
+                <p class="text-xs"><i class="fa-solid fa-clock text-brand-red mr-2"></i> Mon-Sun: 07:00 - 20:00</p>
             </div>
-            <div class="footer-col">
-                <h4>Services</h4>
-                <ul>
-                    <li><a href="#products" onclick="switchPage('products')">Money Market</a></li>
-                    <li><a href="#home" onclick="switchPage('home')">Xtra Savings Deals</a></li>
-                    <li><a href="#products" onclick="switchPage('products')">LiquorShop</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Official Website</h4>
-                <p style="font-size:0.85rem; opacity:0.8; margin-bottom:0.5rem;">Visit the main portal for nationwide leaflets:</p>
-                <a href="https://www.shoprite.co.za" target="_blank" rel="noopener" class="logo-badge" style="display:inline-block;">www.shoprite.co.za</a>
+            <div>
+                <h4 class="text-white font-bold mb-3 text-xs uppercase tracking-wider">POPIA Compliance</h4>
+                <p class="text-xs leading-relaxed text-gray-400">Pick n Cheaper protects your privacy rights under South Africa's Protection of Personal Information Act.</p>
             </div>
         </div>
-
-        <div class="footer-bottom">
-            <p>&copy; 2026 Shoprite Checkers (Pty) Ltd. All rights reserved. | Lower Prices You Can Trust Always.</p>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pt-6 border-t border-gray-800 text-xs text-center text-gray-500">
+            &copy; 2026 Pick n Cheaper Supermarket Ltd. All rights reserved.
         </div>
     </footer>
 
-    <!-- JAVASCRIPT APP LOGIC -->
     <script>
-        /* APPLICATION STATE */
-        let currentUser = null; // null = logged out
-        let cart = [];
+        /* ==========================================================================
+           1. NAVIGATION & MULTI-PAGE TAB SWITCHING LOGIC
+           ========================================================================== */
+        function switchTab(targetId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => page.classList.remove('active'));
 
-        const productsData = [
-            { id: 1, name: "Super Maize Meal 10kg", category: "staples", price: 99.99, normalPrice: 119.99, badge: "Save R20" },
-            { id: 2, name: "Long Grain Parboiled Rice 5kg", category: "staples", price: 79.99, normalPrice: 94.99, badge: "Xtra Savings" },
-            { id: 3, name: "Pure Sunflower Cooking Oil 2L", category: "pantry", price: 49.99, normalPrice: 62.99, badge: "Save R13" },
-            { id: 4, name: "Fresh Choice Whole Chicken per kg", category: "fresh", price: 56.99, normalPrice: 69.99, badge: "Butchery Deal" },
-            { id: 5, name: "Championship Boerewors 500g", category: "fresh", price: 49.99, normalPrice: 59.99, badge: "Fresh Meat" },
-            { id: 6, name: "Ritebrand Large Eggs 30 Pack", category: "fresh", price: 69.99, normalPrice: 79.99, badge: "Daily Bulk" },
-            { id: 7, name: "Full Cream Milk 2L", category: "fresh", price: 29.99, normalPrice: 34.99, badge: "Xtra Savings" },
-            { id: 8, name: "White Sugar 2.5kg", category: "pantry", price: 44.99, normalPrice: 52.99, badge: "Pantry Staple" }
-        ];
-
-        const storeData = [
-            { name: "Shoprite Jabulani Mall", suburb: "Soweto, Gauteng", hours: "08:00 - 19:00" },
-            { name: "Shoprite Golden Acre", suburb: "Cape Town CBD, Western Cape", hours: "08:00 - 18:00" },
-            { name: "Shoprite Middestad", suburb: "Pretoria, Gauteng", hours: "08:00 - 18:30" },
-            { name: "Shoprite Workshop", suburb: "Durban Central, KZN", hours: "08:00 - 18:00" }
-        ];
-
-        /* INITIALIZATION */
-        document.addEventListener("DOMContentLoaded", () => {
-            renderProducts(productsData);
-            renderHomeFeatured();
-            renderStores(storeData);
-            renderMoneyMarketTab('electricity');
-            updateAuthUI();
-        });
-
-        /* NAVIGATION PAGE SWITCHER */
-        function switchPage(pageId) {
-            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-
-            const target = document.getElementById(pageId);
-            if (target) {
-                target.classList.add('active');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Show selected page
+            const selectedPage = document.getElementById('page-' + targetId);
+            if (selectedPage) {
+                selectedPage.classList.add('active');
             }
 
-            const activeLink = document.querySelector(`.nav-link[href="#${pageId}"]`);
-            if (activeLink) activeLink.classList.add('active');
+            // Update Header Navigation Active State
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => {
+                if (btn.getAttribute('data-target') === targetId) {
+                    btn.classList.add('text-brand-red', 'font-bold');
+                } else {
+                    btn.classList.remove('text-brand-red');
+                }
+            });
 
-            // Close mobile menu if open
-            document.getElementById('nav-list').classList.remove('mobile-active');
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleMobileMenu() {
-            document.getElementById('nav-list').classList.toggle('mobile-active');
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
         }
 
-        function scrollToCampaign() {
-            switchPage('home');
-            document.getElementById('campaign-hub-section').scrollIntoView({ behavior: 'smooth' });
+        /* ==========================================================================
+           2. INTERACTIVE FEATURE 1: PROMOTIONAL MODAL POPUP & TIMER
+           ========================================================================== */
+        let countdownSeconds = 2 * 3600 + 14 * 60 + 45; // 2h 14m 45s
+
+        function openPromoModal() {
+            document.getElementById('promo-modal').classList.remove('hidden');
         }
 
-        /* AUTHENTICATION SYSTEM */
-        function openAuthModal() {
-            document.getElementById('auth-modal').style.display = 'flex';
+        function closePromoModal() {
+            document.getElementById('promo-modal').classList.add('hidden');
         }
 
-        function closeAuthModal() {
-            document.getElementById('auth-modal').style.display = 'none';
-        }
+        function startModalTimer() {
+            const hoursEl = document.getElementById('timer-hours');
+            const minutesEl = document.getElementById('timer-minutes');
+            const secondsEl = document.getElementById('timer-seconds');
 
-        function handleAuthSubmit(e) {
-            e.preventDefault();
-            const idVal = document.getElementById('login-id').value;
-            currentUser = {
-                name: idVal.split('@')[0] || "Valued Customer",
-                cardNo: "6001 8842 9912",
-                savingsTotal: "R 240.50"
-            };
-            closeAuthModal();
-            updateAuthUI();
-        }
+            setInterval(() => {
+                if (countdownSeconds > 0) {
+                    countdownSeconds--;
+                    const h = Math.floor(countdownSeconds / 3600);
+                    const m = Math.floor((countdownSeconds % 3600) / 60);
+                    const s = countdownSeconds % 60;
 
-        function demoQuickLogin() {
-            currentUser = {
-                name: "Sipho Dlamini",
-                cardNo: "6001 9931 4410",
-                savingsTotal: "R 385.00"
-            };
-            closeAuthModal();
-            updateAuthUI();
-        }
-
-        function logoutUser() {
-            currentUser = null;
-            updateAuthUI();
-        }
-
-        function updateAuthUI() {
-            const authInfo = document.getElementById('auth-info');
-            const authBtn = document.getElementById('auth-toggle-btn');
-            const aboutAuthCard = document.getElementById('about-auth-card');
-
-            if (currentUser) {
-                authInfo.innerHTML = `👤 ${currentUser.name}`;
-                authBtn.innerText = "Sign Out";
-                authBtn.onclick = logoutUser;
-
-                if (aboutAuthCard) {
-                    aboutAuthCard.innerHTML = `
-                        <p><strong>Status:</strong> <span style="color:var(--green); font-weight:bold;">Active Loyal Member</span></p>
-                        <p><strong>Shopper Name:</strong> ${currentUser.name}</p>
-                        <p><strong>Xtra Savings Card:</strong> ${currentUser.cardNo}</p>
-                        <p><strong>Total Lifetime Savings:</strong> <strong style="color:var(--shoprite-red);">${currentUser.savingsTotal}</strong></p>
-                    `;
+                    hoursEl.textContent = String(h).padStart(2, '0');
+                    minutesEl.textContent = String(m).padStart(2, '0');
+                    secondsEl.textContent = String(s).padStart(2, '0');
                 }
+            }, 1000);
+        }
+
+        function claimDiscountVoucher() {
+            const emailInput = document.getElementById('modal-email');
+            if (emailInput.value && emailInput.value.includes('@')) {
+                document.getElementById('modal-claim-box').classList.add('hidden');
+                document.getElementById('modal-success-box').classList.remove('hidden');
             } else {
-                authInfo.innerHTML = "Logged Out";
-                authBtn.innerText = "Sign In / Loyalty Login";
-                authBtn.onclick = openAuthModal;
-
-                if (aboutAuthCard) {
-                    aboutAuthCard.innerHTML = `
-                        <p style="margin-bottom:1rem;">You are currently browsing as a guest.</p>
-                        <button class="btn-primary" onclick="openAuthModal()">Sign In to View Loyalty Details</button>
-                    `;
-                }
+                alert('Please enter a valid email address to claim your voucher.');
             }
         }
 
-        /* PRODUCTS & CART LOGIC */
-        function renderProducts(list) {
-            const container = document.getElementById('full-product-grid');
-            if (!container) return;
-            container.innerHTML = list.map(item => `
-                <div class="product-card">
+        // Trigger Promo Popup automatically after 3 seconds on initial visit
+        window.addEventListener('load', () => {
+            startModalTimer();
+            setTimeout(() => {
+                openPromoModal();
+            }, 3000);
+        });
+
+        /* ==========================================================================
+           3. INTERACTIVE FEATURE 2: DYNAMIC PRODUCT / CATEGORY FILTER
+           ========================================================================== */
+        const productCatalog = [
+            { id: 1, name: 'Fresh Gala Apples (1.5kg)', category: 'produce', price: 29.99, icon: 'fa-apple-whole', desc: 'Crisp locally harvested farm apples.' },
+            { id: 2, name: 'Cheaper White Rice (2kg)', category: 'cheaper', price: 32.50, icon: 'fa-bowl-rice', desc: 'Long grain staple rice for families.' },
+            { id: 3, name: 'Freshly Baked White Bread', category: 'bakery', price: 11.99, icon: 'fa-bread-slice', desc: 'Baked fresh in store every morning.' },
+            { id: 4, name: 'Eskom Prepaid Electricity', category: 'paypoint', price: 100.00, icon: 'fa-bolt', desc: 'Instant voucher top-up at till point.' },
+            { id: 5, name: 'Fresh Spinach Bunch', category: 'produce', price: 14.99, icon: 'fa-leaf', desc: 'Organically grown rich green spinach.' },
+            { id: 6, name: 'Cheaper Cooking Oil (750ml)', category: 'cheaper', price: 24.99, icon: 'fa-bottle-droplet', desc: 'Triple refined high heat sunflower oil.' },
+            { id: 7, name: 'Butter Croissants (4 Pack)', category: 'bakery', price: 28.00, icon: 'fa-cookie', desc: 'Flaky golden baked pastry delights.' },
+            { id: 8, name: 'Municipal Bill Payment', category: 'paypoint', price: 0.00, icon: 'fa-receipt', desc: 'Zero service fee municipal till payment.' }
+        ];
+
+        function renderProductGrid(filterCat = 'all') {
+            const gridContainer = document.getElementById('product-grid');
+            gridContainer.innerHTML = '';
+
+            const filteredProducts = filterCat === 'all' 
+                ? productCatalog 
+                : productCatalog.filter(p => p.category === filterCat);
+
+            filteredProducts.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'bg-white p-5 rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between';
+                card.innerHTML = `
                     <div>
-                        <span class="product-badge">${item.badge}</span>
-                        <h3 class="product-title">${item.name}</h3>
-                        <div class="product-price">R ${item.price.toFixed(2)}</div>
-                        <p style="font-size:0.8rem; text-decoration:line-through; color:var(--medium-gray);">Normal: R ${item.normalPrice.toFixed(2)}</p>
-                    </div>
-                    <button class="add-cart-btn" onclick="addToCart(${item.id})" style="margin-top:1rem;">+ Add to Basket</button>
-                </div>
-            `).join('');
-        }
-
-        function renderHomeFeatured() {
-            const container = document.getElementById('home-featured-products');
-            if (!container) return;
-            const featured = productsData.slice(0, 4);
-            container.innerHTML = featured.map(item => `
-                <div class="product-card">
-                    <div>
-                        <span class="product-badge">${item.badge}</span>
-                        <h3 class="product-title">${item.name}</h3>
-                        <div class="product-price">R ${item.price.toFixed(2)}</div>
-                    </div>
-                    <button class="add-cart-btn" onclick="addToCart(${item.id})">+ Add to Basket</button>
-                </div>
-            `).join('');
-        }
-
-        function filterProducts(cat, btn) {
-            document.querySelectorAll('#products .mm-tab-btn').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-
-            if (cat === 'all') renderProducts(productsData);
-            else renderProducts(productsData.filter(p => p.category === cat));
-        }
-
-        function addToCart(productId) {
-            const prod = productsData.find(p => p.id === productId);
-            if (!prod) return;
-            cart.push(prod);
-            updateCartUI();
-        }
-
-        function updateCartUI() {
-            document.getElementById('cart-count').innerText = cart.length;
-
-            const itemsContainer = document.getElementById('cart-items-container');
-            if (cart.length === 0) {
-                itemsContainer.innerHTML = "<p style='text-align:center; padding:1rem;'>Your shopping basket is empty.</p>";
-            } else {
-                itemsContainer.innerHTML = cart.map((item, index) => `
-                    <div style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0; border-bottom:1px solid #eee;">
-                        <div>
-                            <strong>${item.name}</strong><br>
-                            <small style="color:var(--shoprite-red);">R ${item.price.toFixed(2)}</small>
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="w-10 h-10 bg-red-50 text-brand-red rounded-lg flex items-center justify-center font-bold">
+                                <i class="fa-solid ${product.icon}"></i>
+                            </div>
+                            <span class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded font-bold capitalize">${product.category}</span>
                         </div>
-                        <button onclick="removeFromCart(${index})" style="background:none; color:var(--medium-gray); font-weight:bold;">✕</button>
+                        <h4 class="font-bold text-gray-900 text-sm mb-1">${product.name}</h4>
+                        <p class="text-xs text-gray-500 mb-3">${product.desc}</p>
                     </div>
-                `).join('');
+                    <div class="flex justify-between items-center pt-2 border-t border-gray-100">
+                        <span class="text-brand-red font-black text-base">${product.price > 0 ? 'R ' + product.price.toFixed(2) : 'Free Service'}</span>
+                        <button onclick="addPresetToShoppingList('${product.name}', ${product.price}, '${product.category}')" class="bg-gray-900 hover:bg-brand-red text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors">
+                            + Add to List
+                        </button>
+                    </div>
+                `;
+                gridContainer.appendChild(card);
+            });
+        }
+
+        function filterCategory(category) {
+            // Update Active Filter Button UI
+            const buttons = document.querySelectorAll('.cat-filter-btn');
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-cat') === category) {
+                    btn.className = 'cat-filter-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-brand-red text-white';
+                } else {
+                    btn.className = 'cat-filter-btn px-3 py-1.5 text-xs font-bold rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200';
+                }
+            });
+
+            // Re-render Product Grid
+            renderProductGrid(category);
+        }
+
+        /* ==========================================================================
+           4. INTERACTIVE FEATURE 3: DIGITAL SHOPPING LIST
+           ========================================================================== */
+        let shoppingList = [
+            { id: 101, name: 'Fresh Gala Apples (1.5kg)', price: 29.99, category: 'Fresh Produce', checked: false },
+            { id: 102, name: 'Cheaper White Rice (2kg)', price: 32.50, category: 'Cheaper Value', checked: false }
+        ];
+
+        function renderShoppingList() {
+            const container = document.getElementById('shopping-list-container');
+            container.innerHTML = '';
+
+            if (shoppingList.length === 0) {
+                container.innerHTML = '<p class="text-xs text-gray-400 text-center py-6">Your shopping list is currently empty.</p>';
+            } else {
+                shoppingList.forEach(item => {
+                    const itemRow = document.createElement('div');
+                    itemRow.className = `flex items-center justify-between p-3 rounded-xl border text-xs ${item.checked ? 'bg-gray-100 text-gray-400 line-through border-gray-200' : 'bg-white border-gray-200'}`;
+                    itemRow.innerHTML = `
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleItemChecked(${item.id})" class="h-4 w-4 text-brand-red focus:ring-brand-red border-gray-300 rounded cursor-pointer">
+                            <div>
+                                <span class="font-bold block truncate">${item.name}</span>
+                                <span class="text-[10px] text-gray-400">${item.category}</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 shrink-0">
+                            <span class="font-bold text-gray-800">R ${item.price.toFixed(2)}</span>
+                            <button onclick="removeShoppingItem(${item.id})" class="text-gray-400 hover:text-red-600">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                    `;
+                    container.appendChild(itemRow);
+                });
             }
 
-            const subtotal = cart.reduce((sum, item) => sum + item.normalPrice, 0);
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            const discount = subtotal - total;
-
-            document.getElementById('cart-subtotal').innerText = `R ${subtotal.toFixed(2)}`;
-            document.getElementById('cart-discount').innerText = `-R ${discount.toFixed(2)}`;
-            document.getElementById('cart-total').innerText = `R ${total.toFixed(2)}`;
+            calculateListTotals();
         }
 
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartUI();
+        function addCustomListItem(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('custom-item-name');
+            const priceInput = document.getElementById('custom-item-price');
+            const catInput = document.getElementById('custom-item-cat');
+
+            const newItem = {
+                id: Date.now(),
+                name: nameInput.value.trim(),
+                price: parseFloat(priceInput.value) || 0,
+                category: catInput.value,
+                checked: false
+            };
+
+            shoppingList.push(newItem);
+            nameInput.value = '';
+            priceInput.value = '';
+            renderShoppingList();
         }
 
-        function openCartModal() {
-            document.getElementById('cart-modal').style.display = 'flex';
+        function addPresetToShoppingList(name, price, cat) {
+            const newItem = {
+                id: Date.now(),
+                name: name,
+                price: price,
+                category: cat,
+                checked: false
+            };
+            shoppingList.push(newItem);
+            renderShoppingList();
         }
 
-        function closeCartModal() {
-            document.getElementById('cart-modal').style.display = 'none';
+        function toggleItemChecked(id) {
+            shoppingList = shoppingList.map(item => item.id === id ? { ...item, checked: !item.checked } : item);
+            renderShoppingList();
         }
 
-        function checkoutCart() {
-            if (cart.length === 0) {
-                alert("Your basket is empty!");
+        function removeShoppingItem(id) {
+            shoppingList = shoppingList.filter(item => item.id !== id);
+            renderShoppingList();
+        }
+
+        function clearShoppingList() {
+            shoppingList = [];
+            renderShoppingList();
+        }
+
+        function calculateListTotals() {
+            const countEl = document.getElementById('list-item-count');
+            const totalEl = document.getElementById('list-total-price');
+
+            const total = shoppingList.reduce((sum, item) => sum + item.price, 0);
+
+            countEl.textContent = shoppingList.length;
+            totalEl.textContent = 'R ' + total.toFixed(2);
+        }
+
+        /* ==========================================================================
+           5. INTERACTIVE FEATURE 4: MINI SAVINGS CALCULATOR
+           ========================================================================== */
+        function updateSavingsCalculator() {
+            const spendVal = parseFloat(document.getElementById('monthly-spend').value);
+            const familyMultiplier = parseFloat(document.getElementById('family-size').value);
+
+            document.getElementById('spend-display').textContent = 'R ' + spendVal.toLocaleString();
+
+            // Estimated 18% savings baseline with family size efficiency factor
+            const savingsPercentage = 0.18;
+            const monthlySavings = spendVal * savingsPercentage;
+            const annualSavings = monthlySavings * 12;
+
+            document.getElementById('monthly-savings-val').textContent = 'R ' + Math.round(monthlySavings).toLocaleString();
+            document.getElementById('annual-savings-val').textContent = 'R ' + Math.round(annualSavings).toLocaleString();
+        }
+
+        /* ==========================================================================
+           6. FORM VALIDATION WITH POPIA COMPLIANCE
+           ========================================================================== */
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            const alertBox = document.getElementById('form-alert');
+            const popiaCheck = document.getElementById('popia-consent');
+
+            if (!popiaCheck.checked) {
+                alertBox.className = 'mb-6 p-4 rounded-xl text-sm font-bold bg-red-100 text-red-700 border border-red-200';
+                alertBox.textContent = 'Please accept POPIA consent terms to submit your inquiry.';
+                alertBox.classList.remove('hidden');
                 return;
             }
-            alert("Order placed successfully! Thank you for shopping with Shoprite.");
-            cart = [];
-            updateCartUI();
-            closeCartModal();
+
+            // Successful Submission
+            alertBox.className = 'mb-6 p-4 rounded-xl text-sm font-bold bg-green-100 text-green-700 border border-green-200';
+            alertBox.textContent = 'Thank you! Your inquiry and VIP club entry have been successfully submitted.';
+            alertBox.classList.remove('hidden');
+
+            document.getElementById('contact-lead-form').reset();
         }
 
-        /* MONEY MARKET TAB SWITCHER */
-        function switchMMTab(tabKey, btn) {
-            document.querySelectorAll('.mm-tabs .mm-tab-btn').forEach(b => b.classList.remove('active'));
-            if(btn) btn.classList.add('active');
-            renderMoneyMarketTab(tabKey);
-        }
-
-        function renderMoneyMarketTab(key) {
-            const container = document.getElementById('mm-tab-content');
-            if (key === 'electricity') {
-                container.innerHTML = `
-                    <h3>Buy Prepaid Electricity</h3>
-                    <p style="font-size:0.85rem; margin-bottom:1rem;">Top up Eskom or Municipal meters instantly.</p>
-                    <div class="form-group">
-                        <label>Meter Number</label>
-                        <input type="text" class="form-control" placeholder="0412 3456 7890">
-                    </div>
-                    <div class="form-group">
-                        <label>Amount (ZAR)</label>
-                        <input type="number" class="form-control" placeholder="e.g. 100">
-                    </div>
-                    <button class="btn-primary" onclick="alert('Electricity Top-Up Processed!')">Purchase Tokens</button>
-                `;
-            } else if (key === 'transfers') {
-                container.innerHTML = `
-                    <h3>Shoprite Money Market Transfer</h3>
-                    <p style="font-size:0.85rem; margin-bottom:1rem;">Send money to any South African mobile number for cash pick-up at any till point.</p>
-                    <div class="form-group">
-                        <label>Recipient Mobile Phone Number</label>
-                        <input type="tel" class="form-control" placeholder="082 123 4567">
-                    </div>
-                    <div class="form-group">
-                        <label>Transfer Amount (ZAR)</label>
-                        <input type="number" class="form-control" placeholder="e.g. 500">
-                    </div>
-                    <button class="btn-primary" onclick="alert('Money Transfer Voucher Issued!')">Send Money Now</button>
-                `;
-            } else {
-                container.innerHTML = `
-                    <h3>Airtime & Data Bundles</h3>
-                    <p style="font-size:0.85rem; margin-bottom:1rem;">Vodacom, MTN, Telkom & Cell C recharge.</p>
-                    <div class="form-group">
-                        <label>Cell Phone Number</label>
-                        <input type="tel" class="form-control" placeholder="071 987 6543">
-                    </div>
-                    <button class="btn-primary" onclick="alert('Airtime recharge complete!')">Recharge Now</button>
-                `;
-            }
-        }
-
-        /* CAMPAIGN INTERACTIVE TOOLS */
-        function sendChatMessage(userMsg, botReply) {
-            const body = document.getElementById('chat-body');
-            body.innerHTML += `<div class="chat-msg msg-out">${userMsg}</div>`;
-            setTimeout(() => {
-                body.innerHTML += `<div class="chat-msg msg-in">${botReply}</div>`;
-                body.scrollTop = body.scrollHeight;
-            }, 600);
-        }
-
-        function spinWheel() {
-            const wheel = document.getElementById('spin-wheel');
-            const degrees = Math.floor(1800 + Math.random() * 360);
-            wheel.style.transform = `rotate(${degrees}deg)`;
-            
-            setTimeout(() => {
-                document.getElementById('wheel-result').innerText = "🎉 Winner! R15 Off Voucher Applied to Maize Meal!";
-            }, 3000);
-        }
-
-        /* CONTACT FORM VALIDATION */
-        function validateContactForm(e) {
-            e.preventDefault();
-            let isValid = true;
-
-            const name = document.getElementById('contact-name').value.trim();
-            const email = document.getElementById('contact-email').value.trim();
-            const cat = document.getElementById('contact-category').value;
-            const msg = document.getElementById('contact-message').value.trim();
-
-            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
-
-            if (!name) {
-                document.getElementById('err-name').style.display = 'block';
-                isValid = false;
-            }
-            if (!email || !email.includes('@')) {
-                document.getElementById('err-email').style.display = 'block';
-                isValid = false;
-            }
-            if (!cat) {
-                document.getElementById('err-category').style.display = 'block';
-                isValid = false;
-            }
-            if (!msg) {
-                document.getElementById('err-message').style.display = 'block';
-                isValid = false;
-            }
-
-            if (isValid) {
-                alert("Thank you, " + name + "! Your enquiry has been received. Our team will get back to you shortly.");
-                document.getElementById('contact-form').reset();
-            }
-        }
-
-        /* STORE LOCATOR SEARCH */
-        function renderStores(list) {
-            const container = document.getElementById('store-results');
-            if (!container) return;
-            container.innerHTML = list.map(s => `
-                <div style="background:#FFFDF0; padding:0.8rem; border-radius:6px; border:1px solid #E2E8F0;">
-                    <strong>${s.name}</strong><br>
-                    <small style="color:var(--medium-gray);">${s.suburb}</small><br>
-                    <small style="color:var(--green); font-weight:bold;">Hours: ${s.hours}</small>
-                </div>
-            `).join('');
-        }
-
-        function filterStores() {
-            const query = document.getElementById('store-search').value.toLowerCase();
-            const filtered = storeData.filter(s => s.name.toLowerCase().includes(query) || s.suburb.toLowerCase().includes(query));
-            renderStores(filtered);
-        }
+        // Initialize Products and List on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderProductGrid('all');
+            renderShoppingList();
+            updateSavingsCalculator();
+        });
     </script>
 </body>
 </html>
